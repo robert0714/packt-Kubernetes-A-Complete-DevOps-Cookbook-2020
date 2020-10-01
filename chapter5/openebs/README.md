@@ -208,3 +208,50 @@ $ kubectl patch storageclass gp2 -p '{"metadata":{"annotations":{"storageclass.b
 $ kubectl patch storageclass openebs-cstor-default -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-defaultclass":"true"}}}'
 ```  
 Make sure that the previous storage class is no longer set as the default and that you only have one default storage class.
+
+# Using an OpenEBS storage class to create dynamic PVs
+Let's perform the following steps to deploy dynamically created persistent volumes using the OpenEBS storage provider:  
+1. Clone the examples repository:
+```
+$ git clone https://github.com/k8sdevopscookbook/src.git
+$ cd src/chapter5/openebs/
+```  
+2. Review minio.yaml and note that PVCs are using the openebs-stordefault storage class.  
+3. Deploy Minio:  
+```
+$ kubectl apply -f minio.yaml
+deployment.apps/minio-deployment created
+persistentvolumeclaim/minio-pv-claim created
+service/minio-service created
+```
+4. Get the Minio service load balancer's external IP:  
+```
+$ kubectl get service
+NAME            TYPE            CLUSTER-IP  EXTERNAL-IP                                                             PORT(S)         AGE
+kubernetes      ClusterIP       10.3.0.1    <none>                                                                  443/TCP         54m
+minio-service   LoadBalancer    10.3.0.29   adb3bdaa893984515b9527ca8f2f8ca6-1957771474.us-west-2.elb.amazonaws.com 9000:32701/TCP  3s
+```
+5. Add port 9000 to the end of the address and open the external IP of the Minio service in your browser:  
+6. Use the username minio, and the password minio123 to log in to the Minio deployment backed by persistent OpenEBS volumes:
+You have now successfully deployed a stateful application that is deployed on the OpenEBS cStor storage engine.
+## How it works...
+This recipe showed you how to quickly provision a persistent storage provider using OpenEBS.
+In the Using ephemeral storage to create persistent volumes recipe, in Step 6, when we deployed a workload using the openebs-jiva-default storage class, OpenEBS launched OpenEBS volumes with three replicas. 
+To set one replica, as is the case with a single-node Kubernetes cluster, you can create a new storage class (similar to the one we created in the Creating OpenEBS storage class recipe) and set the ReplicaCount variable value to 1:
+```
+apiVersion: openebs.io/v1alpha1
+kind: StoragePool
+metadata:
+  name: my-pool
+  type: hostdir
+spec:
+  path: "/my/openebs/folder"
+```
+When ephemeral storage is used, the OpenEBS Jiva storage engine uses the /var/openebs directory on every available node to create replica sparse files. If you would like to change the default or create a new StoragePool resource, you can create a new storage pool and set a custom path.
+
+## See also
+* OpenEBS documentation: https://docs.openebs.io/
+* Beyond the basics: OpenEBS workshop: https://github.com/openebs/community/tree/master/workshop
+* OpenEBS Community Slack channel: https://openebs.io/join-our-slackcommunity
+* OpenEBS enterprise platform: https://mayadata.io/product
+* OpenEBS director for managing stateful workloads: https://account.mayadata.io/login
