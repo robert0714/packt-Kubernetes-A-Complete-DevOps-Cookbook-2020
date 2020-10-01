@@ -155,14 +155,13 @@ Let's perform the following steps to dynamically deploy an NFS PV protected by t
 1. List the storage classes, and confirm that openebs-nfs exists:
 ```
 $ kubectl get sc
-NAME                              PROVISIONER                   AGE
-openebs-cstor-default (default)   openebs.io/provisioner-iscsi  14h
-openebs-device openebs.io/local 15h
-openebs-hostpath openebs.io/local 15h
-openebs-jiva-default openebs.io/provisioner-iscsi 15h
-openebs-nfs openebs.io/nfs 5s
-openebs-snapshot-promoter volumesnapshot.externalstorage.
-k8s.io/snapshot-promoter 15h
+NAME                              PROVISIONER                                             AGE
+openebs-cstor-default (default)   openebs.io/provisioner-iscsi                            14h
+openebs-device                    openebs.io/local                                        15h
+openebs-hostpath                  openebs.io/local                                        15h
+openebs-jiva-default              openebs.io/provisioner-iscsi                            15h
+openebs-nfs                       openebs.io/nfs                                          5s
+openebs-snapshot-promoter         volumesnapshot.externalstorage.k8s.io/snapshot-promoter 15h
 ```
 2. Now, you can use the openebs-nfs storage class to create PVCs for applications
 that require ReadWriteMany access:
