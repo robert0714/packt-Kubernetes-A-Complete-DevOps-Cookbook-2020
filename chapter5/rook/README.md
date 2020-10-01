@@ -2,7 +2,7 @@
 Rook is a cloud-native, open source storage orchestrator for Kubernetes. Rook provides self-managing, self-scaling, and self-healing distributed storage systems in Kubernetes. In this section, we will create multiple storage providers using the Rook storage orchestrator for your applications in Kubernetes. You will learn to create a Ceph provider for your stateful applications that require persistent storage.  
 ## Getting ready
 Make sure that you have a Kubernetes cluster ready and kubectl configured to manage the cluster resources.
-How to do it…  
+## How to do it…  
 This section is sub-divided further into the following subsections to facilitate the process:
 Installing a Ceph provider using Rook
 *  Creating a Ceph cluster
@@ -184,3 +184,8 @@ wordpress-mysql ClusterIP     None            <none>        3306/TCP      3m42s
 6. Open the external IP of the WordPress service in your browser to access your Wordpress deployment:
 
 Now you know how to get the popular WordPress service, with persistent storage stored on Rook-based Ceph storage, up and running.
+
+## See also
+*  Rook documentation: https://rook.io/docs/rook/master/
+*  Rook Ceph storage documentation: https://rook.io/docs/rook/master/cephstorage.html
+*  Rook community slack channel: https://slack.rook.io/
