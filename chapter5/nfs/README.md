@@ -183,5 +183,5 @@ EOF
 
 ```
 ## See also
-Rook NFS operator documentation: https://github.com/rook/rook/blob/master/Documentation/nfs. md
-OpenEBS provisioning read-write-many PVCs: https://docs.openebs.io/ docs/next/rwm.html
+*  Rook NFS operator documentation: https://github.com/rook/rook/blob/master/Documentation/nfs.md
+*  OpenEBS provisioning read-write-many PVCs: https://docs.openebs.io/docs/next/rwm.html
