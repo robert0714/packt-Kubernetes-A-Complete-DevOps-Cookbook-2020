@@ -1,4 +1,16 @@
-# Installing a Ceph provider using Rook
+# Configuring and managing persistent storage using Rook  
+Rook is a cloud-native, open source storage orchestrator for Kubernetes. Rook provides self-managing, self-scaling, and self-healing distributed storage systems in Kubernetes. In this section, we will create multiple storage providers using the Rook storage orchestrator for your applications in Kubernetes. You will learn to create a Ceph provider for your stateful applications that require persistent storage.  
+## Getting ready
+Make sure that you have a Kubernetes cluster ready and kubectl configured to manage the cluster resources.
+How to do it…  
+This section is sub-divided further into the following subsections to facilitate the process:
+Installing a Ceph provider using Rook
+*  Creating a Ceph cluster
+*  Verifying a Ceph cluster's health
+*  Create a Ceph block storage class
+*  Using a Ceph block storage class to create dynamic PVs
+
+## Installing a Ceph provider using Rook
 Let's perform the following steps to get a Ceph scale-out storage solution up and running using the Rook project:
 1. Clone the Rook repository:
 ```
@@ -21,7 +33,7 @@ rook-discover-mdg2s                   1/1     Running     0       97s
 ```
 Now you have learned how to deploy the Rook orchestration components for the Ceph provider running on Kubernetes.
 
-# Creating a Ceph cluster  
+## Creating a Ceph cluster  
 Let's perform the following steps to deploy a Ceph cluster using the Rook Operator:
 1. Create a Ceph cluster:
 ```bash
@@ -53,7 +65,7 @@ $ kubectl get pod -n rook-ceph
 Within a minute, a fully functional Ceph cluster will be deployed and ready to be used. You can read more about Ceph in the Rook Ceph Storage Documentation link in the See also
 section.
 
-# Verifying a Ceph cluster's health
+## Verifying a Ceph cluster's health
 The Rook toolbox is a container with common tools used for rook debugging and testing. Let's perform the following steps to deploy the Rook toolbox to verify cluster health:  
 1. Deploy the Rook toolbox:
 ```bash
@@ -91,7 +103,7 @@ $ kubectl -n rook-ceph delete deployment rook-ceph-tools
 ```
 Now you know how to deploy the Rook toolbox with its common tools that are used to debug and test Rook.
 
-# Create a Ceph block storage class
+## Create a Ceph block storage class
 Let's perform the following steps to create a storage class for Ceph storage.:
 1. Create CephBlockPool:
 ```
@@ -138,7 +150,7 @@ rook-ceph-block     rook-ceph.rbd.csi.ceph.com    3s
 As you can see from the preceding provisioner name, rook-ceph.rbd.csi.ceph.com,Rook also uses CSI to interact with Kubernetes APIs. This driver is optimized for RWO pod
 access where only one pod may access the storage.
 
-# Using a Ceph block storage class to create dynamic PVs
+## Using a Ceph block storage class to create dynamic PVs
 In this recipe, we will deploy Wordpress using dynamic persistent volumes created by the Rook Ceph block storage provider. Let's perform the following steps:
 1. Clone the examples repository:
 ```bash
