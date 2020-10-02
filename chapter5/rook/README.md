@@ -44,18 +44,18 @@ metadata:
   name: rook-ceph
   namespace: rook-ceph
 spec:
-cephVersion:
-  image: ceph/ceph:v14.2.3-20190904
-dataDirHostPath: /var/lib/rook
-mon:
-  count: 3
-dashboard:
-  enabled: true
-storage:
-  useAllNodes: true
-  useAllDevices: false
-  directories:
-  - path: /var/lib/rook
+  cephVersion:
+    image: ceph/ceph:v14.2.3-20190904
+  dataDirHostPath: /var/lib/rook
+  mon:
+    count: 3
+  dashboard:
+    enabled: true
+  storage:
+    useAllNodes: true
+    useAllDevices: false
+    directories:
+    - path: /var/lib/rook
 EOF
 ```  
 2. Verify that all pods are running:  
