@@ -17,9 +17,13 @@ This section is sub-divided further into the following subsections to facilitate
 The OpenEBS storage provider requires that the iSCSI client runs on all worker nodes:  
 1. On all your worker nodes, follow the steps to install and enable open-iscsi:
 ```
-$ sudo apt-get update && sudo apt-get install open-iscsi && sudo
-service open-iscsi restart
-```
+## ubuntu
+$ sudo apt-get update && sudo apt-get install open-iscsi && sudo service open-iscsi restart
+
+## centos
+$ sudo yum install iscsi-initiator-utils -y && sudo  sudo systemctl enable --now iscsid
+```  
+reference: [https://docs.openebs.io/docs/next/quickstart.html]  
 2. Validate that the iSCSI service is running:  
 ```
 $ systemctl status iscsid
