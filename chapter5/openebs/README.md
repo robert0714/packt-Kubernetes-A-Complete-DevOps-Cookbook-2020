@@ -179,14 +179,14 @@ $ cat <<EOF | kubectl apply -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-name: openebs-cstor-default
-annotations:
-  openebs.io/cas-type: cstor
-  cas.openebs.io/config: |
-    - name: StoragePoolClaim
-      value: "cstor-disk-pool"
-    - name: ReplicaCount
-      value: "3"
+  name: openebs-cstor-default
+  annotations:
+    openebs.io/cas-type: cstor
+    cas.openebs.io/config: |
+      - name: StoragePoolClaim
+        value: "cstor-disk-pool"
+      - name: ReplicaCount
+        value: "3"
 provisioner: openebs.io/provisioner-iscsi
 EOF
 ```
