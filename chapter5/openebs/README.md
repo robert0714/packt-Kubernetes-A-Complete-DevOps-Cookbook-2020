@@ -3,8 +3,8 @@ OpenEBS is a popular open source, cloud-native storage (CNS) project with a larg
 will learn how to create volumes using different types of storage engine options for stateful workloads on Kubernetes.
 
 ## Getting ready
-For this recipe, we need to have helm and kubectl installed. Make sure you have a Kubernetes cluster ready and kubectl configured to manage the cluster resources.
-
+For this recipe, we need to have helm and kubectl installed. Make sure you have a Kubernetes cluster ready and kubectl configured to manage the cluster resources.   
+reference: [https://github.com/openebs/openebs/tree/master/k8s/lib/vagrant/test/k8s/1.6]
 ## How to do it…
 This section is sub-divided further into the following subsections to facilitate the process:
 *  Installing iSCSI client prerequisites
