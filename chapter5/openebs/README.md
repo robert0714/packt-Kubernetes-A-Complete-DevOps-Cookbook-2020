@@ -230,6 +230,7 @@ deployment.apps/minio-deployment created
 persistentvolumeclaim/minio-pv-claim created
 service/minio-service created
 ```
+If your storageClassName 'openebs-cstor-default' were not ready ,you will see the status of persistentvolumeclaim/minio-pv-claim is pendding. You can replace it by "openebs-jiva-default" in  minio.yaml to see the result.
 4. Get the Minio service load balancer's external IP:  
 ```
 $ kubectl get service
