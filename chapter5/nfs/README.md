@@ -144,6 +144,7 @@ $ cd src/chapter5/openebs
 ```
 $ kubectl apply -f nfs
 ```
+ps. If you use Kubernetes 1.16 , you would see error: error: unable to recognize "nfs/psp-openebs-nfs.yaml": no matches for kind "PodSecurityPolicy" in version "extensions/v1beta1" . You can see the cause in [https://kubernetes.io/blog/2019/07/18/api-deprecations-in-1-16/] kubernetes API version changed , need to replace "extensions/v1beta1" by "policy/v1beta1" in chapter5/nfs/psp-openebs-nfs.yaml。  
 3. List the PVCs and confirm that a PVC named openebspvc has been created:
 ```
 $ kubectl get pvc
