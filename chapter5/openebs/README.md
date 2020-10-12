@@ -220,7 +220,9 @@ Let's perform the following steps to deploy dynamically created persistent volum
 $ git clone https://github.com/k8sdevopscookbook/src.git
 $ cd src/chapter5/openebs/
 ```  
-2. Review minio.yaml and note that PVCs are using the openebs-stordefault storage class.  
+2. Review minio.yaml and note that PVCs are using the openebs-stordefault storage class.    
+ps. If you use Kubernetes 1.16 , you would see error: unable to recognize "minio.yaml": no matches for kind "Deployment" in version "apps/v1beta2"  .
+ You can see the cause in [https://kubernetes.io/blog/2019/07/18/api-deprecations-in-1-16/]  kubernetes API version changed , need to replace "apps/v1beta2"  by  "apps/v1"。  
 3. Deploy Minio:  
 ```
 $ kubectl apply -f minio.yaml
