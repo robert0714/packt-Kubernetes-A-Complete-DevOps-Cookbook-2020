@@ -171,14 +171,14 @@ $ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-name: openebs-nfs-pv-claim
+  name: openebs-nfs-pv-claim
 spec:
-storageClassName: "openebs-nfs"
-accessModes:
-- ReadWriteMany
-resources:
-requests:
-storage: 1Mi
+  storageClassName: "openebs-nfs"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Mi
 EOF
 
 ```
