@@ -225,7 +225,7 @@ following steps to restore the snapshot we created in the previous recipe:
 As you can see, a new PVC named csi-ebs-pvc-restored will be created
 based on the ebs-volume-snapshot snapshot:  
 ```
-$ cat <<EOF | kubectl apply -f -
+ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -235,12 +235,12 @@ spec:
   - ReadWriteOnce
   storageClassName: aws-csi-ebs
   resources:
-  requests:
-  storage: 4Gi
+    requests:
+      storage: 4Gi
   dataSource:
-  name: ebs-volume-snapshot
-  kind: VolumeSnapshot
-  apiGroup: snapshot.storage.k8s.io
+    name: ebs-volume-snapshot
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
 EOF
 ```
 2. Create another pod that will continue to write to the /data/out.txt file inside
