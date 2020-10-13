@@ -24,12 +24,12 @@ GA) at the moment. If you run into an issue, perform the following step:
 1. Set the following feature-gates flags to true for both kube-apiserver
 and kubelet :
 ```
--  --feature-gates=VolumeSnapshotDataSource=true
--  --feature-gates=KubeletPluginsWatcher=true
--  --feature-gates=CSINodeInfo=true
--  --feature-gates=CSIDriverRegistry=true
--  --feature-gates=BlockVolume=true
--  --feature-gates=CSIBlockVolume=true  
+- --feature-gates=VolumeSnapshotDataSource=true
+- --feature-gates=KubeletPluginsWatcher=true
+- --feature-gates=CSINodeInfo=true
+- --feature-gates=CSIDriverRegistry=true
+- --feature-gates=BlockVolume=true
+- --feature-gates=CSIBlockVolume=true  
 ```
 >  Steps 1. find the kube-apiserver pod.
 ```
