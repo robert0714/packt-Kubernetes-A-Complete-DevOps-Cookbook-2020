@@ -153,6 +153,24 @@ metadata:
 snapshotter: ebs.csi.aws.com
 EOF
 ```  
+Or  see the error .
+```
+"no matches for kind "VolumeSnapshotClass" in version "snapshot.storage.k8s.io/v1beta1"
+```
+You maybe manually create crds.[https://github.com/kubernetes-csi/external-snapshotter]    
+https://github.com/kubernetes-csi/external-snapshotter/tree/master/client/config/crd
+```
+$ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
+$ cat <<EOF | kubectl apply -f -
+apiVersion: snapshot.storage.k8s.io/v1beta1
+kind: VolumeSnapshotClass
+metadata:
+  name: csi-ebs-vsc
+driver: cstor.csi.openebs.io
+deletionPolicy: Delete
+EOF
+```
+
 4. A PVC must be created using the CSI driver of a storage vendor. In our recipe,
 we will use the PVC we created in the Installing EBS CSI driver to manage EBS
 volumes recipe. Now, create a VolumeSnapshot using the PVC name ( csi-ebs-
