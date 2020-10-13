@@ -36,7 +36,47 @@ $ kubectl get statefulsets
 NAME    READY   AGE
 minio   4/4     2m17s
 ```
+But if you have no default Storage Class , you'll see data-minio-0(PVC)'s state  pendding.[https://kubernetes.io/docs/tasks/administer-cluster/change-default-storage-class/]  
+>> (1).List the StorageClasses in your cluster:
+>>
+  ```
+  kubectl get storageclass
+  ```
+>>  The output is similar to this:
+    ```
+    NAME                 PROVISIONER               AGE
+    standard (default)   kubernetes.io/gce-pd      1d
+    gold                 kubernetes.io/gce-pd      1d
+    ```
+>>  The default StorageClass is marked by (default).   
+>>   (2).Mark the default StorageClass as non-default:
 
+>>The default StorageClass has an annotation storageclass.kubernetes.io/is-default-class set to true. Any other value or absence of the annotation is interpreted as false.
+
+>>To mark a StorageClass as non-default, you need to change its value to false:
+```
+kubectl patch storageclass standard -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+```
+>>where standard is the name of your chosen StorageClass.
+
+>> (3).Mark a StorageClass as default:
+
+>>Similarly to the previous step, you need to add/set the annotation storageclass.kubernetes.io/is-default-class=true.
+```
+kubectl patch storageclass gold -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+```
+>>  Please note that at most one StorageClass can be marked as default. If two or more of them are marked as default, a PersistentVolumeClaim without storageClassName explicitly specified cannot be created.
+
+>> (4).Verify that your chosen StorageClass is default:
+```
+kubectl get storageclass
+```
+>>The output is similar to this:
+```
+NAME             PROVISIONER               AGE
+standard         kubernetes.io/gce-pd      1d
+gold (default)   kubernetes.io/gce-pd      1d
+```
 Now, you have a MinIO application that's been deployed. In the next recipe, we will learn how to discover its external address to access the service.
 
 ## Accessing the MinIO web user interface
