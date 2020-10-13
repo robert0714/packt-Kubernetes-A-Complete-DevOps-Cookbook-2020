@@ -31,6 +31,8 @@ and kubelet :
 - --feature-gates=BlockVolume=true
 - --feature-gates=CSIBlockVolume=true  
 ```
+or refernce[https://www.ibm.com/support/knowledgecenter/SSNQFQ_10.1.5/spp/r_spp_cbs_prereqs.html]  
+
 >  Steps 1. find the kube-apiserver pod.
 ```
 $  kubectl -n kube-system get pods
