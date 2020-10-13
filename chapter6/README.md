@@ -261,10 +261,10 @@ spec:
     volumeMounts:
     - name: persistent-storage
       mountPath: /data
-    volumes:
-    - name: persistent-storage
-      persistentVolumeClaim:
-        claimName: csi-ebs-pvc-restored
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: csi-ebs-pvc-restored
 EOF
 ```
 3. Confirm that the newapp pod contains the restored data and the timestamps
