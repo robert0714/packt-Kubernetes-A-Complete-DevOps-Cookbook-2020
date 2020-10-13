@@ -189,6 +189,23 @@ spec:
     kind: PersistentVolumeClaim
 EOF
 ```  
+You'll see error error: unable to recognize "STDIN": no matches for kind "VolumeSnapshot" in version "snapshot.storage.k8s.io/v1alpha1"
+You need manually to  create crds.[https://github.com/kubernetes-csi/external-snapshotter]    
+https://github.com/kubernetes-csi/external-snapshotter/tree/master/client/config/crd
+```
+$ kubectl apply -f  https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
+$ cat <<EOF | kubectl apply -f -
+apiVersion: snapshot.storage.k8s.io/v1beta1
+kind: VolumeSnapshot
+metadata:
+  name: ebs-volume-snapshot
+spec:
+  volumeSnapshotClassName: csi-ebs-vsc
+  source:
+    persistentVolumeClaimName: csi-ebs-pvc
+EOF
+```
+
 5. List the Volume Snapshots:
 ```
 $ kubectl get volumesnapshot
