@@ -75,13 +75,17 @@ $ velero install \
   --use-restic \
   --backup-location-configregion=minio,s3ForcePathStyle="true",s3Url=http://ac76d4a1ac72c496299b17573ac4cf2d-512600720.us-west-2.elb.amazonaws.com:9000
 ```  
+or
+```
+$ kubectl apply -f ~/velero-v1.5.1-linux-amd64/examples/minio/00-minio-deployment.yaml
+```
 reference: 
 *  https://velero.io/docs/v1.5/basic-install/
 *  https://velero.io/docs/v1.5/supported-providers/
 *  https://velero.io/docs/v1.5/contributions/minio/
 6. Confirm that the deployment was successful:
 ```
-$ kubectl get deployments -l component=velero --namespace=velero
+$ kubectl get deployments  --namespace=velero
 NAME    READY   UP-TO-DATE  AVAILABLE  AGE
 velero  1/1     1           1           62s
 ```  
