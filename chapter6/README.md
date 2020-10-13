@@ -141,7 +141,7 @@ spec:
 EOF
 ```
 3. Create a VolumeSnapshotClass . Make sure that the snapshot provider is set to
-your CSI driver name. In this recipe, this is ebs.csi.aws.com :  
+your CSI driver name [https://kubernetes-csi.github.io/docs/drivers.html]. In this recipe, this is ebs.csi.aws.com :  
 ```
 $ cat <<EOF | kubectl apply -f -
 apiVersion: snapshot.storage.k8s.io/v1alpha1
