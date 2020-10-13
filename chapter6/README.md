@@ -23,12 +23,76 @@ Some of the features that will be discussed here may be at different stages (alp
 GA) at the moment. If you run into an issue, perform the following step:  
 1. Set the following feature-gates flags to true for both kube-apiserver
 and kubelet :
-*  --feature-gates=VolumeSnapshotDataSource=true
-*  --feature-gates=KubeletPluginsWatcher=true
-*  --feature-gates=CSINodeInfo=true
-*  --feature-gates=CSIDriverRegistry=true
-*  --feature-gates=BlockVolume=true
-*  --feature-gates=CSIBlockVolume=true  
+```
+-  --feature-gates=VolumeSnapshotDataSource=true
+-  --feature-gates=KubeletPluginsWatcher=true
+-  --feature-gates=CSINodeInfo=true
+-  --feature-gates=CSIDriverRegistry=true
+-  --feature-gates=BlockVolume=true
+-  --feature-gates=CSIBlockVolume=true  
+```
+>  Steps 1. find the kube-apiserver pod.
+```
+$  kubectl -n kube-system get pods
+NAME                                       READY   STATUS    RESTARTS   AGE
+calico-kube-controllers-659f4b66fd-5wrkf   1/1     Running   0          14h
+calico-node-2zbrh                          1/1     Running   0          14h
+calico-node-67xf7                          1/1     Running   0          14h
+calico-node-69kkw                          1/1     Running   0          14h
+calico-node-c4856                          1/1     Running   0          14h
+calico-node-fckpm                          1/1     Running   0          14h
+coredns-5d4dd4b4db-9m4zg                   1/1     Running   0          14h
+coredns-5d4dd4b4db-jb2dx                   1/1     Running   0          14h
+etcd-k8s-m1                                1/1     Running   0          14h
+kube-apiserver-k8s-m1                      1/1     Running   0          14h
+kube-controller-manager-k8s-m1             1/1     Running   0          14h
+kube-proxy-9r2nm                           1/1     Running   0          14h
+kube-proxy-9vnwq                           1/1     Running   0          14h
+kube-proxy-bfr9x                           1/1     Running   0          14h
+kube-proxy-fhh4t                           1/1     Running   0          14h
+kube-proxy-pjhcr                           1/1     Running   0          14h
+kube-scheduler-k8s-m1                      1/1     Running   0          14h
+tiller-deploy-74494fcb9c-ml7jb             1/1     Running   0          80m
+```
+>  Steps 2. edit the kube-apiserver pod.
+```
+$ kubectl -n kube-system edit pod kube-apiserver-k8s-m1   
+```
+And then ,edit it.
+```
+spec:
+  containers:
+  - command:
+    - kube-apiserver
+    - --advertise-address=192.168.0.30
+    - --allow-privileged=true
+    - --authorization-mode=Node,RBAC
+    - --client-ca-file=/etc/kubernetes/pki/ca.crt
+    - --enable-admission-plugins=NodeRestriction
+    - --enable-bootstrap-token-auth=true
+    - --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt
+    - --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt
+    - --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key
+    - --etcd-servers=https://127.0.0.1:2379
+    - --insecure-port=0
+    - --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt
+    - --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key
+    - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+    - --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt
+    - --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key
+    - --requestheader-allowed-names=front-proxy-client
+    - --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt
+    - --requestheader-extra-headers-prefix=X-Remote-Extra-
+    - --requestheader-group-headers=X-Remote-Group
+    - --requestheader-username-headers=X-Remote-User
+    - --secure-port=6443
+    - --service-account-key-file=/etc/kubernetes/pki/sa.pub
+    - --service-cluster-ip-range=10.96.0.0/12
+    - --tls-cert-file=/etc/kubernetes/pki/apiserver.crt
+    - --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+    - --feature-gates=VolumeSnapshotDataSource=true
+    image: k8s.gcr.io/kube-apiserver:v1.17.3
+```
 You can find the latest statuses for features and their states by going to the Kubernetes
 Feature Gates link in the See also section.
 ## Creating a volume snapshot via CSI
