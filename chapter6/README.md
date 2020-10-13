@@ -120,7 +120,7 @@ EOF
   
 2. Create a pod that will write to the /data/out.txt file inside the **PersistentVolume (PV)**:  
 ```
-$ cat <<EOF | kubectl apply -f -
+cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Pod
 metadata:
@@ -132,12 +132,12 @@ spec:
       command: ["/bin/sh"]
       args: ["-c", "while true; do echo $(date -u) >> /data/out.txt;sleep 5; done"]
       volumeMounts:
-      - name: persistent-storage
-        mountPath: /data
-    volumes:
-    - name: persistent-storage
-      persistentVolumeClaim:
-        claimName: csi-ebs-pvc
+        - name: persistent-storage
+          mountPath: /data
+  volumes:
+  - name: persistent-storage
+    persistentVolumeClaim:
+      claimName: csi-ebs-pvc
 EOF
 ```
 3. Create a VolumeSnapshotClass . Make sure that the snapshot provider is set to
