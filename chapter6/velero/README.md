@@ -54,13 +54,11 @@ $ sudo mv velero-v1.5.1-linux-amd64/velero /usr/local/bin/
 ```
 $ velero version
 Client:
-  Version: v1.5.0
-  Git commit: a357f21aec6b39a8244dd23e469cc4519f1fe608
-<error getting server version: the server could not find the
-requested resource (post serverstatusrequests.velero.io)>
+	Version: v1.5.1
+	Git commit: 87d86a45a6ca66c6c942c7c7f08352e26809426c
+<error getting server version: no matches for kind "ServerStatusRequest" in version "velero.io/v1">
 ```
-4. Create the credentials-velero file with the access key and secret key you
-used in the Configuring and managing S3 object storage using Minio recipe:
+4. Create the credentials-velero file with the access key and secret key you used in the Configuring and managing S3 object storage using Minio recipe:
 ```
 $ cat > credentials-velero <<EOF
 [default]
@@ -68,8 +66,7 @@ aws_access_key_id = minio
 aws_secret_access_key = minio123
 EOF
 ```
-5. Update the s3Url with the external IP of your MinIO service and install Velero
-Server:
+5. Update the s3Url with the external IP of your MinIO service and install Velero Server:
 ```
 $ velero install \
   --provider aws \
@@ -78,6 +75,10 @@ $ velero install \
   --use-restic \
   --backup-location-configregion=minio,s3ForcePathStyle="true",s3Url=http://ac76d4a1ac72c496299b17573ac4cf2d-512600720.us-west-2.elb.amazonaws.com:9000
 ```  
+reference: 
+*  https://velero.io/docs/v1.5/basic-install/
+*  https://velero.io/docs/v1.5/supported-providers/
+*  https://velero.io/docs/v1.5/contributions/minio/
 6. Confirm that the deployment was successful:
 ```
 $ kubectl get deployments -l component=velero --namespace=velero
