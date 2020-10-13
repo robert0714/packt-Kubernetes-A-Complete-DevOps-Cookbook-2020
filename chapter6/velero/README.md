@@ -39,22 +39,22 @@ learn how to deploy Velero in our Kubernetes cluster by following these steps:
 1. Download the latest version of Velero:
 
 ```
-$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.1.0/velero-v1.1.0-linux-amd64.tar.gz
+$ wget https://github.com/vmware-tanzu/velero/releases/download/v1.5.1/velero-v1.5.1-linux-amd64.tar.gz
 ```
-ps. At the time of writing this book, the latest version of Velero was v1.1.0.
+ps. At the time of writing this book, the latest version of Velero was v1.5.1.
 Check the Velero repository at [https://github.com/vmware-tanzu/velero/] releases and update the link with the latest download link if it's
 changed since this book's release.  
 
 2. Extract the tarball:
 ```
-$ tar -xvzf velero-v1.1.0-linux-amd64.tar.gz
-$ sudo mv velero-v1.1.0-linux-amd64/velero /usr/local/bin/
+$ tar -xvzf velero-v1.5.1-linux-amd64.tar.gz
+$ sudo mv velero-v1.5.1-linux-amd64/velero /usr/local/bin/
 ```
 3. Confirm that the velero command is executable:
 ```
 $ velero version
 Client:
-  Version: v1.1.0
+  Version: v1.5.0
   Git commit: a357f21aec6b39a8244dd23e469cc4519f1fe608
 <error getting server version: the server could not find the
 requested resource (post serverstatusrequests.velero.io)>
