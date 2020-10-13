@@ -15,6 +15,7 @@ This section is sub-divided further into the following subsections to facilitate
 *  Using an OpenEBS storage class to create dynamic PVs
 ## Installing iSCSI client prerequisites
 The OpenEBS storage provider requires that the iSCSI client runs on all worker nodes:  
+[https://github.com/openebs/cstor-operators/blob/master/docs/quick.md]  
 1. On all your worker nodes, follow the steps to install and enable open-iscsi:
 ```
 ## ubuntu
