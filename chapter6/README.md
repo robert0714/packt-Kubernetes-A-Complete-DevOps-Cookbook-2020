@@ -130,8 +130,7 @@ spec:
     - name: app
       image: centos
       command: ["/bin/sh"]
-      args: ["-c", "while true; do echo $(date -u) >> /data/out.txt;
-sleep 5; done"]
+      args: ["-c", "while true; do echo $(date -u) >> /data/out.txt;sleep 5; done"]
       volumeMounts:
       - name: persistent-storage
         mountPath: /data
