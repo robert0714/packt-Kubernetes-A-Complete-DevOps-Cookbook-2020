@@ -5,13 +5,13 @@ You will learn how to install and use K10, create standard and scheduled backups
 applications to an S3 target, and restore them back to the Kubernetes clusters.
 
 ## Getting ready
-Make sure you have a Kubernetes cluster ready and kubectl and helm configured so that
+Make sure you have a Kubernetes cluster ready and **kubectl** and **helm** configured so that
 you can manage the cluster resources. In this recipe, we will use a three-node Kubernetes
 cluster on AWS.  
 This recipe requires an existing stateful workload with presentable data to simulate a
-disaster. To restore the data, we will use the mytestapp application we created in
-the Installing EBS CSI Driver to manage EBS volumes recipe in Chapter 5 , Preparing for
-Stateful Workloads.  
+disaster. To restore the data, we will use the **mytestapp** application we created in
+the **Installing EBS CSI Driver to manage EBS volumes** recipe in **Chapter 5 , Preparing for
+Stateful Workloads**.  
 Clone the *k8sdevopscookbook/src* repository to your workstation to use the manifest
 files under the *chapter6* directory, as follows:
 ```
