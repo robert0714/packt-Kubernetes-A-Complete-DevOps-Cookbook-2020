@@ -69,6 +69,13 @@ $ helm install kasten/k10 --name=k10 --namespace=kasten-io \
 --set secrets.awsAccessKeyId="AWS_ACCESS_KEY_ID" \
 --set secrets.awsSecretAccessKey="AWS_SECRET_ACCESS_KEY"
 ```
+Since we’ve used OpenEBS as the persistent storage solution and its default storage class, our helm install command would be
+```
+# Modify the storageClass and pvc size according to the storage classes  present in your cluster.
+$ helm install kasten/k10 --name=k10 --namespace=kasten-io \\
+--set persistence.storageClass=openebs-jiva-default \\
+--set persistence.size=20Gi
+```
 4. Confirm that the deployment status is DEPLOYED using the following helm
 command:
 ```
