@@ -170,6 +170,12 @@ Wed Oct 14 02:06:34 UTC 2020
 ```
 $ velero backup create myapp-backup --selector app=app2backup
 ```
+Run `velero backup describe myapp-backup` or `velero backup logs myapp-backup` for more details.
+```
+$ velero backup describe myapp-backup
+$ velero backup logs myapp-backup
+```
+
 6. Confirm that the backup phase is completed:  
 ```
 $ velero backup describe myapp-backup
