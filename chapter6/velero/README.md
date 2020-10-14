@@ -163,8 +163,8 @@ $ kubectl apply -f myapp.yaml
 ```
 4. Verify that our **myapp** pod writes data to the volume:
 ```
-$ kubectl exec -it myapp cat /data/out.txt -nbackup-example
-Thu Sep 12 23:18:08 UTC 2019
+$ kubectl -n  backup-example exec -it myapp cat /data/out.txt
+Wed Oct 14 02:06:34 UTC 2020
 ```
 5. Create a backup for all the objects with the **app=app2backup** label:  
 ```
