@@ -121,9 +121,9 @@ backup target.
 ##  Backing up an application
 Let's perform the following steps to take a backup of an application and its volumes using
 Velero. All the YAML manifest files we create here can be found under the
-/src/chapter6/velero directory:  
+**/src/chapter6/velero** directory:  
 1. If you have an application and volumes to back up labeled already, you can skip
-to Step 5. Otherwise, create a namespace and a PVC with the following
+to ***Step 5***. Otherwise, create a namespace and a PVC with the following
 commands:  
 ```
 cat <<EOF | kubectl apply -f -
@@ -135,8 +135,8 @@ metadata:
     app: app2backup
 EOF
 ```
-2. Create a PVC in the backup-example namespace using your preferred
-storageClass . In our example this is aws-csi-ebs :  
+2. Create a PVC in the **backup-example** namespace using your preferred
+**storageClass** . In our example this is **aws-csi-ebs** :  
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -155,18 +155,18 @@ spec:
       storage: 4Gi
 EOF
 ```
-3. Review the myapp.yaml file in the src/chapter6/velero directory and use it
-to create a pod that will use the PVC and write to the /data/out.txt file inside
+3. Review the **myapp.yaml** file in the **src/chapter6/velero** directory and use it
+to create a pod that will use the PVC and write to the **/data/out.txt** file inside
 the pod:  
 ```
 $ kubectl apply -f myapp.yaml
 ```
-4. Verify that our myapp pod writes data to the volume:
+4. Verify that our **myapp** pod writes data to the volume:
 ```
 $ kubectl exec -it myapp cat /data/out.txt -nbackup-example
 Thu Sep 12 23:18:08 UTC 2019
 ```
-5. Create a backup for all the objects with the app=app2backup label:  
+5. Create a backup for all the objects with the **app=app2backup** label:  
 ```
 $ velero backup create myapp-backup --selector app=app2backup
 ```
@@ -195,7 +195,7 @@ Let's perform the following steps to restore the application from its backup:
 $ kubectl delete pvc pvc2backup -nbackup-example
 $ kubectl delete pod myapp -nbackup-example
 ```
-2. Restore your application from your previous backup called myapp-backup :  
+2. Restore your application from your previous backup called **myapp-backup** :  
 ```
 $ velero restore create --from-backup myapp-backup
 ```
@@ -223,7 +223,7 @@ $ velero schedule create myapp-daily --schedule="0 0 1 * * ?" --selector app=app
 If you are not familiar with cron expressions, you can create a different schedule
 using the Cron expression generator link in the See also section.  
 
-ps.Note that the preceding schedule uses a cron expression. As an alternative, you can use a shorthand expression such as --schedule="@daily" or use an online cron maker to create a cron expression.
+ps.Note that the preceding schedule uses a cron expression. As an alternative, you can use a shorthand expression such as **--schedule="@daily"** or use an online cron maker to create a cron expression.
 
 2. Get a list of the currently scheduled backup jobs:
 ```
