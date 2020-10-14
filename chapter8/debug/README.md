@@ -88,3 +88,61 @@ mongo-1 2/2     Running   0           88s
 mongo-2 2/2     Running   0           50s
 ```
 You have successfully learned how to inspect why a pod is pending and fix it.
+
+## Inspecting pods in ImagePullBackOff status
+Sometimes your manifest files may have a typo in the image name, or the image location
+may have changed. As a result, when you deploy the application, the container image will
+not be found and the deployment will get stuck. In this recipe, we will learn how to inspect
+the common problem of pods becoming stuck in ImagePullBackOff status:  
+1. In the ***/src/chapter8*** folder, inspect the contents of the ***mongo-image.yaml*** file and deploy it by running the following command. The deployment manifest includes MongoDB Statefulset with three replicas, Service and will get stuck in ImagePullBackOff state due to typo in the container image name and we will inspect it to find the source: 
+```
+$ cat debug/mongo-image.yaml
+$ kubectl apply -f debug/mongo-image.yaml
+```
+2. List the pods by running the following command. You will notice that the status of the mongo-0 pod is ***ImagePullBackOff*** :
+```
+$ kubectl get pods
+NAME      READY   STATUS              RESTARTS   AGE
+mongo-0   0/2     ImagePullBackOff    0          29s
+```
+3. Get additional information on the pods using the kubectl describe pod command and look for the Events section. In this case, Warning is pointing to a failure to pull the mongi image:
+```
+$ kubectl describe pod mongo-0
+...
+Events:
+Type    Reason  Age               From                                    Message
+----    ------  ----              ----                                    -------
+Warning Failed  25s (x3 over 68s) kubelet,ip-172-20-32-169.ec2.internal   Error: ErrImagePull
+Warning Failed  25s (x3 over 68s) kubelet,ip-172-20-32-169.ec2.internal   Failed to pull image "mongi": rpc error: code = Unknown desc = Error response from daemon: pullaccess denied for mongi, repository does not exist or may require'docker login'
+Normal  Pulling 25s (x3 over 68s) kubelet,ip-172-20-32-169.ec2.internal   Pulling image "mongi"
+Normal BackOff 14s (x4 over 67s)  kubelet,ip-172-20-32-169.ec2.internal   Back-off pulling image "mongi"
+Warning Failed 14s (x4 over 67s)  kubelet,ip-172-20-32-169.ec2.internal   Error: ImagePullBackOff
+```
+4. Now we know that we need to confirm the container image name. The correct  name is supposed to be mongo . Let's edit the manifest file, mongo-image.yaml ,and change the image name to mongo as follows:
+```
+...
+spec:
+  terminationGracePeriodSeconds: 10
+  containers:
+  - name: mongo
+  image: mongo
+  command:
+...
+```
+5. Delete and redeploy the resource by running the following commands:
+```
+$ kubectl delete -f mongo-image.yaml
+$ kubectl apply -f mongo-image.yaml
+```  
+6. List the pods by running the following command. You will notice that the status
+is now Running for all pods that were previously in ImagePullBackOff status
+in step 2:
+
+```
+$ kubectl get  pods
+NAME    READY   STATUS      RESTARTS    AGE
+mongo-0 2/2     Running     0           4m55s
+mongo-1 2/2     Running     0           4m55s
+mongo-2 2/2     Running     0           4m55s
+```
+You have successfully learned to inspect a pod with a status of ImagePullBackOff and troubleshoot it.
