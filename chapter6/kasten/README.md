@@ -134,7 +134,7 @@ kind: Namespace
 metadata:
   name: backup-example
   labels:
-  app: app2backup
+    app: app2backup
 EOF
 ```
 
