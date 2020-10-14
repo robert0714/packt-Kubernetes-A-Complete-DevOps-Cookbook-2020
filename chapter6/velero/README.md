@@ -192,8 +192,8 @@ With that, you've learned how to create a backup of an application using labels.
 Let's perform the following steps to restore the application from its backup:  
 1. Delete the application and its PVC to simulate a data loss scenario:  
 ```
-$ kubectl delete pvc pvc2backup -nbackup-example
-$ kubectl delete pod myapp -nbackup-example
+$ kubectl -n backup-example delete pvc pvc2backup
+$ kubectl -n backup-example delete pod myapp
 ```
 2. Restore your application from your previous backup called **myapp-backup** :  
 ```
@@ -201,14 +201,14 @@ $ velero restore create --from-backup myapp-backup
 ```
 3. Confirm your application is running:
 ```
-$ kubectl get pod -nbackup-example
+$ kubectl -n backup-example get pod
 NAME  READY STATUS    RESTARTS  AGE
 myapp 1/1   Running   0         10m
 ```
 
 4. Confirm that our myapp pod writes data to the volume:  
 ```
-$ kubectl exec -it myapp cat /data/out.txt -nbackup-example
+$ kubectl -n backup-example exec -it myapp cat /data/out.txt
 ```
 With that, you've learned how to restore an application and its volumes from its backup
 using Velero.
