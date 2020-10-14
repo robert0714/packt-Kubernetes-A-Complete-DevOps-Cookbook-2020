@@ -146,3 +146,80 @@ mongo-1 2/2     Running     0           4m55s
 mongo-2 2/2     Running     0           4m55s
 ```
 You have successfully learned to inspect a pod with a status of ImagePullBackOff and troubleshoot it.
+
+## Inspecting pods in CrashLoopBackOff status
+Inspecting pods in ***CrashLoopBackOff*** status is fundamentally similar to inspecting  Pending pods, but might also require a bit more knowledge of the container workload you  are creating. ***CrashLoopBackOff*** occurs when the application inside the container keeps  crashing, the parameters of the pod are configured incorrectly, a liveness probe failed, or an  error occurred when deploying on Kubernetes.  
+In this recipe, we will learn how to inspect the common problem of pods becoming stuck in  ***CrashLoopBackOff*** status:  
+1. In the ***/src/chapter8*** folder, inspect the contents of the ***mongo-config.yaml*** file and deploy it running the following command. The deployment manifest includes a MongoDB statefulset with three replicas, Service and will get stuck in CrashLoopBackOff state due mistake with a missing configuration file and we will inspect it to find the source:  
+```
+$ cat debug/mongo-config.yaml
+$ kubectl apply -f debug/mongo-config.yaml
+```
+2. List the pods by running the following command. You will notice that the status is CrashLoopBackOff or Error for the mongo-0 pod:
+```
+$ kubectl get pods
+NAME    READY STATUS            RESTARTS AGE
+mongo-0 1/2   CrashLoopBackOff  3        58s
+```
+3. Get additional information on the pods using the kubectl describe pod command and look for the Events section. In this case, the Warning shows that the container has restarted, but it is not pointing to any useful information:  
+```
+$ kubectl describe pod mongo-0
+...
+Events:
+Type      Reason    Age               From                                  Message
+----      ------    ----              ----                                  -------   ...
+Normal    Pulled    44s (x4 over 89s) kubelet,ip-172-20-32-169.ec2.internal Successfully pulled image "mongo"
+Warning   BackOff   43s (x5 over 87s) kubelet,ip-172-20-32-169.ec2.internal Back-off restarting failed container
+```
+4. When Events from the pods are not useful, you can use the kubectl logs 
+command to get additional information from the pod. Check the messages in the 
+pod's logs using the following command. The log message is pointing to a 
+missing file; further inspection of the manifest is needed:  
+```
+$ kubectl logs mongo-0 mongo
+/bin/sh: 1: cannot open : No such file
+```
+5. Inspect and have a closer look at the application manifest file, ***mongo-config.yaml*** , and you will see that the environmental variable ***MYFILE*** is missing in this case:   
+```
+...
+  spec:
+    terminationGracePeriodSeconds: 10
+    containers:
+      - name: mongo
+        image: mongo
+        command: ["/bin/sh"]
+        args: ["-c", "sed \"s/foo/bar/\" < $MYFILE"]
+...
+```
+6. To fix this issue, you can add a ***ConfigMap*** to your deployment. Edit the ***mongo-config.yaml*** file and add the missing file by adding the MYFILE parameter with a ***ConfigMap*** resource to the beginning of the file similar to following:
+```
+$ cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-env
+data:
+  MYFILE: "/etc/profile"
+EOF
+```
+7. Delete and redeploy the resource by running the following commands:
+```
+$ kubectl delete -f mongo-image.yaml
+$ kubectl apply -f mongo-image.yaml
+```
+8. List the pods by running the following command. You will notice that the status is now Running for all pods that were previously in CrashLoopBackOff status
+in step 2.  
+```
+$ kubectl get pods
+NAME    READY   STATUS    RESTARTS    AGE
+mongo-0 2/2     Running   0           4m15s
+mongo-1 2/2     Running   0           4m15s
+mongo-2 2/2     Running   0           4m15s
+```
+You have successfully learned how to inspect a pod's CrashLoopBackOff issue and fix it.
+## See also
+*  Debugging init containers: https://kubernetes.io/docs/tasks/debug-application-cluster/debug-init-containers/
+*  Debugging pods and ReplicationControllers https://kubernetes.io/docs/tasks/debug-application-cluster/debug-pod-replication-controller/
+*  Debugging a statefulset: https://kubernetes.io/docs/tasks/debug-application-cluster/debug-stateful-set/
+*  Determining the reason for pod failure: https://kubernetes.io/docs/tasks/debug-application-cluster/determine-reason-pod-failure/
+*  Squash, a debugger for microservices: https://github.com/solo-io/squash
