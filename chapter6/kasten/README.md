@@ -102,10 +102,18 @@ Kasten Dashboard service on port 8000 to your local workstation on port 8080 :
 $ export KASTENDASH_POD=$(kubectl get pods --namespace kasten-io -l "service=gateway" -o jsonpath="{.items[0].metadata.name}")
 $ kubectl port-forward --namespace kasten-io $KASTENDASH_POD 8080:8000 >> /dev/null &
 ```
+or use LoadBalancer /NodePort
+```
+kubectl -n kasten-io patch svc gateway --type='json' -p '[{"op":"replace","path":"/spec/type","value":"LoadBalancer"}]'
+```
 2. On your workstation, open http://127.0.0.1:8080/k10/# with your
 browser:
 ```
 $ firefox http://127.0.0.1:8080/k10/#
+```
+or 
+```
+$ firefox http://[[LoadBalancerIP]]/k10/#
 ```
 3. Read and accept the end user license agreement:
 
