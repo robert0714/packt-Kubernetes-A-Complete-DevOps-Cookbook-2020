@@ -38,12 +38,13 @@ $ helm repo add kasten https://charts.kasten.io/
 some pre-installation tests to verify your cluster:
 ```
 $ curl https://docs.kasten.io/tools/k10_preflight.sh | bash
+
 Checking for tools
---> Found kubectl --> Found helm
-Checking access to the Kubernetes context kubernetes-
-admin@net39dvo58
---> Able to access the default Kubernetes namespace
-Checking for required Kubernetes version (>= v1.10.0)
+ --> Found kubectl
+ --> Found helm
+Checking access to the Kubernetes context kubernetes-admin@kubernetes
+ --> Able to access the default Kubernetes namespace
+Checking for required Kubernetes version (>= v1.12.0)
 --> Kubernetes version (v1.15.3) meets minimum requirements
 Checking if Kubernetes RBAC is enabled
 --> Kubernetes RBAC is enabled
