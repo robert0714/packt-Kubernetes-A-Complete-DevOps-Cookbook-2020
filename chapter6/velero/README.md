@@ -73,11 +73,31 @@ $ velero install \
   --bucket velero \
   --secret-file ./credentials-velero \
   --use-restic \
-  --backup-location-configregion=minio,s3ForcePathStyle="true",s3Url=http://ac76d4a1ac72c496299b17573ac4cf2d-512600720.us-west-2.elb.amazonaws.com:9000
+  --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://ac76d4a1ac72c496299b17573ac4cf2d-512600720.us-west-2.elb.amazonaws.com:9000
 ```  
 or
 ```
 $ kubectl apply -f ~/velero-v1.5.1-linux-amd64/examples/minio/00-minio-deployment.yaml
+$ velero install \
+  --provider aws \
+  --plugins velero/velero-plugin-for-aws:v1.0.0 \
+  --bucket velero \
+  --secret-file ./credentials-velero \
+  --use-restic \
+  --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://192.16.35.17:9000 
+```
+or
+```
+$ kubectl apply -f ~/velero-v1.5.1-linux-amd64/examples/minio/00-minio-deployment.yaml
+$ velero install \
+  --provider aws \
+  --plugins velero/velero-plugin-for-aws:v1.0.0 \
+  --bucket velero \
+  --secret-file ./credentials-velero \
+  --use-restic \
+  --backup-location-config region=minio,s3ForcePathStyle="true",s3Url=http://192.16.35.17:9000 \
+  --use-volume-snapshots=false \
+  --snapshot-location-config region="default"
 ```
 reference: 
 *  https://velero.io/docs/v1.5/basic-install/
@@ -85,9 +105,16 @@ reference:
 *  https://velero.io/docs/v1.5/contributions/minio/
 6. Confirm that the deployment was successful:
 ```
-$ kubectl get deployments  --namespace=velero
+$ kubectl   -n velero get deployments -l component=velero 
 NAME    READY   UP-TO-DATE  AVAILABLE  AGE
 velero  1/1     1           1           62s
+
+$ kubectl   -n velero get deployments                     
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+minio    1/1     1            1           16h
+velero   1/1     1            1           4m48s
+
+$ kubectl logs deployment/velero -n velero
 ```  
 With that, Velero has been configured on your Kubernetes cluster using MinIO as the
 backup target.
