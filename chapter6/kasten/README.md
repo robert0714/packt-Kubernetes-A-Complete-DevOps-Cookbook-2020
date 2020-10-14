@@ -28,6 +28,10 @@ This section is further divided into the following subsections to make this proc
 * Backing up an application
 * Restoring an application
 ## Installing Kasten
+Due to Kasten including PROMETHEUS , the minimum system requirements for PROMETHEUS is :  
+* 4 GB RAM. 
+* CPU on the level of 5th generation Pentium/Core i3 or equivalent.   
+So the worker node need to adjust the Ram to 4 GB .  
 Let's perform the following steps to install Kasten as a backup solution in our Kubernetes
 cluster:  
 1. Add the K10 helm repository:
