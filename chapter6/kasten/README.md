@@ -50,6 +50,8 @@ Checking if Kubernetes RBAC is enabled
 --> Kubernetes RBAC is enabled
 Checking if the Aggregated Layer is enabled
 --> The Kubernetes Aggregated Layer is enabled
+Checking if a default StorageClass is present
+ --> A default storage class was found
 Checking if the Kasten Helm repo is present
 --> The Kasten Helm repo was found
 Checking for required Helm Tiller version (>= v2.11.0)
@@ -75,7 +77,7 @@ NAME  REVISION  UPDATED                   STATUS    CHART APP VERSION     NAMESP
 k10   1         Tue Oct 29 07:36:19 2019  DEPLOYED  k10-1.1.56 1.1.56     kasten-io
 ```
 All the pods should be deployed in around a minute after this step as Kasten exposes an
-API based on Kubernetes CRDs. You can either use kubectl with the new CRDs (refer to
+API based on Kubernetes CRDs. You can either use *kubectl* with the new CRDs (refer to
 the *Kasten CLI commands* link in the See also section) or use the Kasten Dashboard by
 following the next recipe, that is, the Accessing the Kasten Dashboard recipe.
 
