@@ -206,11 +206,11 @@ ubun
 ```
 3. Set the gp2 AWS EBS storage class as the non-default option:  
 ```
-$ kubectl patch storageclass gp2 -p '{"metadata":{"annotations":{"storageclass.beta.kubernetes.io/is-defaultclass":"false"}}}'
+$ kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
 ```
 4. Define openebs-cstor-default as the default storage class:  
 ```
-$ kubectl patch storageclass openebs-cstor-default -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-defaultclass":"true"}}}'
+$ kubectl patch storageclass openebs-cstor-default -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
 ```  
 Make sure that the previous storage class is no longer set as the default and that you only have one default storage class.
 
