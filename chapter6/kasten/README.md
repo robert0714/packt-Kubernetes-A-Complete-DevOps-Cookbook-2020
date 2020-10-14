@@ -162,7 +162,7 @@ EOF
 3. Create a pod that will use the PVC and write to the /data/out.txt file inside the pod using the sample myapp.yaml manifest under the src/chapter6/kasten directory:
 
 ```
-$ kubectl apply -f - kasten/myapp.yaml
+$ kubectl apply -f   kasten/myapp.yaml
 ```
 
 4. Verify that our myapp pod writes data to the volume:
