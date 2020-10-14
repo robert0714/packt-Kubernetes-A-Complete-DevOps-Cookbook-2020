@@ -234,8 +234,8 @@ myapp-daily Enabled 2019-09-13 21:38:36 +0000 UTC   0 0 1 * * ?   720h0m0s 2m ag
 3. Confirm that a backup has been created by the scheduled backup job:
 ```
 $ velero backup get
-NAME        STATUS  CREATED                                         EXPIRES     STORAGE LOCATION    SELECTOR
-myapp-daily-20190913205123 Completed 2019-09-13 20:51:24 +0000 UTC  29d         default             app=app2backup
+NAME        			STATUS  	CREATED                        EXPIRES     STORAGE LOCATION    SELECTOR
+myapp-daily-20190913205123  	Completed 	2019-09-13 20:51:24 +0000 UTC  29d         default             app=app2backup
 ```
 With that, you've learned how to create scheduled backups of an application using Velero.
 
