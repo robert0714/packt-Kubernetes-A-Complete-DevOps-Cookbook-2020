@@ -156,7 +156,7 @@ You will learn more about Vault storage later in this chapter IN the ***Securing
 $ kubectl config set-credentials user3445 --client-certificate=user3445.crt --client-key=user3445.key
 $ kubectl config set-context user3445-context --cluster=local --namespace=secureapp --user=user3445
 ```
-If you saw  error :cannot access /home/vagrant/.kube/config.lock: No such file or directory.
+If you saw  error :cannot access /home/vagrant/.kube/config.lock: No such file or directory.   
 Solution Beside, steps specified in [kubernetes documentation|https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#more-information].
 ```
 $ mkdir -p $HOME/.kube
