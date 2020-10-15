@@ -169,13 +169,17 @@ $ sudo chown $(id -u):$(id -g) $HOME/.kube/
 ```
 6. List the existing context using the following comment. You will see that the new user3445-context has been created:
 ```
-kubectl config get-contexts
+$ kubectl config get-contexts
+CURRENT   NAME                          CLUSTER      AUTHINFO           NAMESPACE
+*         kubernetes-admin@kubernetes   kubernetes   kubernetes-admin   
+          user3445-context              local        user3445           secureapp
 ```
 7. Now, try to list the pods using the new user context. You will get an access 
 denied error since the new user doesn't have any roles and new users don't come 
 with any roles assigned to them by default:
 ```
 $ kubectl --context=user3445-context get pods
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 8. Optionally, you can **base64** encode all three files ( **user3445.crt** , 
 **user3445.csr** , and **user3445.key** ) using the openssl base64 -in 
@@ -188,3 +192,114 @@ $ cat config-user3445.yaml
 With that, you've learned how to create new users. Next, you will create roles and assign 
 them to the user.
 
+## Creating Roles and RoleBindings
+Roles and RolesBindings are always used in a defined namespace, meaning that the 
+permissions can only be granted for the resources that are in the same namespace as the 
+Roles and the RoleBindings themselves compared to the ClusterRoles and 
+ClusterRoleBindings that are used to grant permissions to cluster-wide resources such as 
+nodes.
+
+Let's perform the following steps to create an example Role and RoleBinding in our cluster:   
+1. First, create a namespace where we will create the Role and RoleBinding. In our 
+example, the namespace is secureapp :
+```
+$ kubectl create ns secureapp
+```
+2. Create a role using the following rules. This role basically allows all operations to 
+be performed on deployments, replica sets, and pods for the deployer role in 
+the secureapp namespace we created in Step 1. Note that any permissions that 
+are granted are only additive and there are no deny rules: 
+```
+$ cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: secureapp
+  name: deployer
+rules:
+- apiGroups: ["", "extensions", "apps"]
+  resources: ["deployments", "replicasets", "pods"]
+  verbs: ["get", "list", "watch", "create", "update", "patch","delete"]
+EOF
+```
+3. Create a RoleBinding using the deployer role and for the username john.geek 
+in the secureapp namespace. We're doing this since a RoleBinding can only 
+reference a Role that exists in the same namespace: 
+```
+$ cat <<EOF | kubectl apply -f -
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: deployer-binding
+  namespace: secureapp
+subjects:
+- kind: User
+  name: john.geek
+  apiGroup: ""
+roleRef:
+  kind: Role
+  name: deployer
+  apiGroup: ""
+EOF
+```
+With that, you've learned how to create a new Role and grant permissions to a user using RoleBindings.
+## Testing the RBAC rules
+Let's perform the following steps to test the Role and RoleBinding we created earlier:  
+1. Deploy a test pod in the secureapp namespace where the user has access:
+```
+$ cat <<EOF | kubectl --context=user3445-context apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: secureapp
+spec:
+  containers:
+  - image: busybox
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+    name: busybox
+  restartPolicy: Always
+EOF
+```
+List the pods in the new user's context. The same command that failed in the Creating user accounts recipe in Step 7 should now execute successfully:
+```
+$ kubectl --context=user3445-context get pods
+NAME                            READY   STATUS    RESTARTS   AGE
+busybox 1/1                     1/1     Running   1          8h
+```
+If you try to create the same pod in a different namespace, you will see that the command 
+will fail to execute.
+
+## How it works...
+This recipe showed you how to create new users in Kubernetes and quickly create Roles 
+and RoleBindings to grant permission to user accounts on Kubernetes.
+
+Kubernetes clusters have two types of users:
+
+*  ***User accounts***: User accounts are normal users that are managed externally.
+*  ***Service accounts***: Service accounts are the users who are associated with the Kubernetes services and are managed by the Kubernetes API with its own resources.
+
+You can read more about service accounts by looking at the Managing service accounts link in the *See also* section.
+
+In the Creating Roles and RoleBindings recipe, in Step 1, we created a Role named deployer .
+Then, in Step 2, we granted the rules associated with the deployer Role to the user account *john.geek* .
+
+RBAC uses the *rbac.authorization.k8s.io* API to make authorization decisions. This 
+allows admins to dynamically configure policies using the Kubernetes APIs. If you wanted 
+to use the existing Roles and give someone cluster-wide superuser permission, you could 
+use the *cluster-admin* ClusterRole with a ClusterRoleBinding instead. ClusterRoles don't 
+have namespace limits and can execute commands in any namespace with the granted 
+permissions. Overall, you should be careful while assigning the *cluster-admin* 
+ClusterRole to users. ClusterRoles can be also limited to namespaces, similar to Roles if 
+they are used with RoleBindings to grant permissions instead.
+
+## See also
+*  RBAC Authorization in Kubernetes documentation: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#rolebinding-and-clusterrolebinding
+*  More on the default roles and role bindings: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#default-roles-and-role-bindings
+*  Autogenerating RBAC policies based on Kubernetes audit logs: https://github.com/liggitt/audit2rbac
+*  Kubernetes Authentication: https://kubernetes.io/docs/reference/access-authn-authz/authentication/
+*  Managing Service Accounts: https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/
+*  The kubectl-bindrole tool for finding Kubernetes Roles bound to a specified ServiceAccount: https://github.com/Ladicle/kubectl-bindrole
