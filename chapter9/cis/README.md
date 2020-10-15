@@ -281,8 +281,8 @@ further action is required.
 *  Hardening Guide for Rancher https://rancher.com/docs/rancher/v2.x/en/security/hardening-2.2/
 *  Must-have Kubernetes security audit tools:
     *  Kube-bench: https://github.com/aquasecurity/kube-bench
-    *  Kube-hunter: https://​kube-​hunter.​aquasec.​com/​
-    *  Kubeaudit: https://​github.​com/​Shopify/​kubeaudit
-    *  Kubesec: https://github.​com/​controlplaneio/​kubesec
-    *  Open Policy Agent: https:/​/​www.​openpolicyagent.​org/​
-    *  K8Guard: https://k8guard.github.​io/​
+    *  Kube-hunter: https://kube-hunter.aquasec.com/
+    *  Kubeaudit: https://github.com/Shopify/kubeaudit
+    *  Kubesec: https://github.com/controlplaneio/kubesec
+    *  Open Policy Agent: https://www.openpolicyagent.org/
+    *  K8Guard: https://k8guard.github.io/
