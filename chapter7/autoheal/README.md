@@ -63,21 +63,38 @@ section, before ***volumeClaimTemplates*** . Your YAML manifest should look
 similar to the following. This will send an HTTP request to 
 the ***/minio/health/live*** location every ***20*** seconds to validate its health:
 ```
-...
-    volumeMounts:
-    - name: data
-      mountPath: /data
+...(ommit)
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: minio
+spec:
+  serviceName: minio
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: minio
+        env:
+...(ommit)
+        volumeMounts:
+        - name: data
+          mountPath: /data
 #### Starts here
-    livenessProbe:
-      httpGet:
-        path: /minio/health/live
-        port: 9000
-      initialDelaySeconds: 120
-      periodSeconds: 20
+        livenessProbe:
+          httpGet:
+            path: /minio/health/live
+            port: 9000
+          initialDelaySeconds: 120
+          periodSeconds: 20
 #### Ends here
   # These are converted to volume claims by the controller
   # and mounted at the paths mentioned above.
   volumeClaimTemplates:
+  ...(ommit)
 ```
 For liveness probes that use HTTP requests to work, an application needs to 
 expose unauthenticated health check endpoints. In our example, MinIO 
