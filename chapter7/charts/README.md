@@ -145,9 +145,7 @@ $ helm install . --name my-app7-dev --set serviceType=LoadBalancer
 following command. You will find the my-app7-dev-todo-dev pod running on 
 the node labeled environment: development :
 ```
-$ for n in $(kubectl get nodes -l environment=development --no-
-headers | cut -d " " -f1); do kubectl get pods --all-namespaces --
-no-headers --field-selector spec.nodeName=${n} ; done
+$ for n in $(kubectl get nodes -l environment=development --no-headers | cut -d " " -f1); do kubectl get pods --all-namespaces --no-headers --field-selector spec.nodeName=${n} ; done
 ```
 With that, you've learned how to schedule workload pods onto selected nodes using the ***nodeSelector*** primitive.
 
