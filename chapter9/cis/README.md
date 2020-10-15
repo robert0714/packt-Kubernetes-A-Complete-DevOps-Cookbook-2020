@@ -284,5 +284,5 @@ further action is required.
     *  Kube-hunter:https://​kube-​hunter.​aquasec.​com/​
     *  Kubeaudit:https://​github.​com/​Shopify/​kubeaudit
     *  Kubesec:https://github.​com/​controlplaneio/​kubesec
-    *  OpenPolicyAgent:https:/​/​www.​openpolicyagent.​org/​
+    *  Open Policy Agent:https:/​/​www.​openpolicyagent.​org/​
     *  K8Guard:https://k8guard.github.​io/​
