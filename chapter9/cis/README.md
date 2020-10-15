@@ -279,3 +279,10 @@ further action is required.
 *  Hardening Kubernetes from Scratch: https://github.com/hardening-kubernetes/from-scratch
 *  CNCF Blog on 9 Kubernetes Security Best Practices Everyone Must Follow:https://www.cncf.io/blog/2019/01/14/9-kubernetes-security-best-practices-everyone-must-follow/
 *  Hardening Guide for Rancher https://rancher.com/docs/rancher/v2.x/en/security/hardening-2.2/
+*  Must-haveKubernetessecurityaudittools:
+  *  Kube-bench:https://github.​com/​aquasecurity/​kube-​bench
+  *  Kube-hunter:https://​kube-​hunter.​aquasec.​com/​
+  *  Kubeaudit:https://​github.​com/​Shopify/​kubeaudit
+  *  Kubesec:https://github.​com/​controlplaneio/​kubesec
+  *  OpenPolicyAgent:https:/​/​www.​openpolicyagent.​org/​
+  *  K8Guard:https://k8guard.github.​io/​
