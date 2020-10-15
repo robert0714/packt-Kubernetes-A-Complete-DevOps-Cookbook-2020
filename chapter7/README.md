@@ -168,6 +168,28 @@ spec:
   targetCPUUtilizationPercentage: 50
 EOF
 ```
+or  autoscaling/v2beta1
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-ch7-app-autoscaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-ch7-app-node
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 50
+EOF
+```
 
 Although the results may be the same most of the time, a declarative 
 configuration requires an understanding of the Kubernetes object configuration 
