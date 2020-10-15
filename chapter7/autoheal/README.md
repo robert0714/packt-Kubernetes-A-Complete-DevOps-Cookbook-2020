@@ -121,3 +121,54 @@ application, and check the events in the pod description. You will see a ***mini
 $ kubectl describe pod minio-0
 ```
 
+5. You can confirm the restarts by listing the pods. You will see that every MinIO 
+pod is restarted multiple times due to it having a failing liveness status:
+```
+$ kubectl get pods
+NAME                             READY   STATUS    RESTARTS   AGE
+minio-0                          1/1     Running   4          6h51m
+minio-1                          1/1     Running   4          6h44m
+minio-2                          1/1     Running   3          6h44m
+minio-3                          1/1     Running   3          6h14m
+```
+
+In this recipe, you learned how to implement the auto-healing functionality for applications 
+that are running in Kubernetes clusters.
+
+## How it works...
+This recipe showed you how to use a liveness probe on your applications running on 
+Kubernetes.
+
+In the ***Adding liveness probes to pods*** recipe, in ***Step 1***, we added an HTTP request-based 
+health check.
+
+By adding the StatefulSet path and port, we let kubelet probe the defined endpoints. Here, 
+the ***initialDelaySeconds*** field tells kubelet that it should wait ***120*** seconds before the 
+first probe. If your application takes a while to get the endpoints ready, then make sure that 
+you allow enough time before the first probe; otherwise, your pods will be restarted before 
+the endpoints can respond to requests.  
+
+In ***Step 3***, the ***periodSeconds*** field specifies that kubelet should perform a liveness probe 
+every ***20*** seconds. Again, depending on the applications' expected availability, you should 
+set a period that is right for your application.
+
+## How it works...
+This recipe showed you how to use a liveness probe on your applications running on 
+Kubernetes.
+
+In the ***Adding liveness probes to pods*** recipe, in Step 1, we added an HTTP request-based 
+health check.
+
+By adding the StatefulSet path and port, we let kubelet probe the defined endpoints. Here, 
+the ***initialDelaySeconds*** field tells kubelet that it should wait 120 seconds before the 
+first probe. If your application takes a while to get the endpoints ready, then make sure that 
+you allow enough time before the first probe; otherwise, your pods will be restarted before 
+the endpoints can respond to requests.
+
+In ***Step 3***, the ***periodSeconds*** field specifies that kubelet should perform a liveness probe 
+every ***20*** seconds. Again, depending on the applications' expected availability, you should 
+set a period that is right for your application.
+
+## See also
+*  Configuring liveness and readiness probes: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+*  Kubernetes Best Practices: Setting up health checks: https://cloud.google.com/blog/products/gcp/kubernetes-best-practices-setting-up-health-checks-with-readiness-and-liveness-probes
