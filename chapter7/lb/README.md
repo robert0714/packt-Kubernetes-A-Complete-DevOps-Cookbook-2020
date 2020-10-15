@@ -131,6 +131,6 @@ and service mesh using Linkerd.
 ## See also
 * Kubernetes documentation on the load balancer service type: https://kubernetes.io/docs/concepts/services-networking/service/#loadbalancer
 * Using a load balancer on Amazon EKS: https://docs.aws.amazon.com/eks/latest/userguide/load-balancing.html
-* Using a load balancer on AKS: https:/​ / ​ docs.​ microsoft.​ com/​ en-​ us/​ azure/​ aks/load-​ balancer-standard
-* Using a load balancer on Alibaba Cloud: https:/​ / ​ www.​ alibabacloud.​ com/​ help/doc-​ detail/​ 53759.​ htm
-* Load balancer for your private Kubernetes cluster: https:/​ / ​ blog.​ alexellis.​ io/ingress-​ for-​ your-​ local-​ kubernetes-​ cluster/​
+* Using a load balancer on AKS: https://docs.microsoft.com/en-us/azure/aks/load-balancer-standard
+* Using a load balancer on Alibaba Cloud: https://www.alibabacloud.com/help/doc-detail/53759.htm
+* Load balancer for your private Kubernetes cluster: https://blog.alexellis.io/ingress-for-your-local-kubernetes-cluster/
