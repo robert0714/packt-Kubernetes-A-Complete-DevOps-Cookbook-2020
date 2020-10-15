@@ -115,11 +115,11 @@ $ openssl req -new -key user3445.key \
 -subj "/CN=john.geek/O=development"
 ```
 3. To use the built-in signer, you need to locate the cluster-signing certificates for 
-your cluster. By default, the ca.crt and ca.key files should be in the 
-/etc/kubernetes/pki/ directory.If you are using kops to deploy, your cluster 
+your cluster. By default, the *ca.crt* and *ca.key* files should be in the 
+*/etc/kubernetes/pki/* directory.If you are using kops to deploy, your cluster 
 signing keys can be downloaded from 
-**s3://$BUCKET_NAME/$KOPS_CLUSTER_NAME/pki/private/ca/*.key and
-s3://$BUCKET_NAME/$KOPS_CLUSTER_NAME/pki/issued/ca/*.crt** . Once you've located the keys, change the CERT_LOCATION mentioned in the following 
+**s3://$BUCKET_NAME/$KOPS_CLUSTER_NAME/pki/private/ca/*.key** and
+**s3://$BUCKET_NAME/$KOPS_CLUSTER_NAME/pki/issued/ca/*.crt** . Once you've located the keys, change the CERT_LOCATION mentioned in the following 
 code to the current location of the files and generate the final signed certificate:
 ```
 $ openssl x509 -req -in user3445.csr \
@@ -128,6 +128,19 @@ $ openssl x509 -req -in user3445.csr \
 -CAcreateserial -out user3445.crt \
 -days 500
 ```
+You'll see it .
+```
+$ sudo openssl x509 -req -in user3445.csr \
+ -CA     /etc/kubernetes/pki/ca.crt  \
+ -CAkey  /etc/kubernetes/pki/ca.key  \
+ -CAcreateserial -out user3445.crt  \
+ -days 500
+ 
+Signature ok
+subject=/CN=john.geek/O=development
+Getting CA Private Key
+```
+generating user3445.crt  
 4. If all the files have been located, the command in Step 3 should return an output similar to the following:
 ```
 Signature ok
