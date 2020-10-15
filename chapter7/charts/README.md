@@ -112,8 +112,7 @@ as follows:
 ...
 ## Affinity for pod assignment
 ## Ref:
-https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#
-affinity-and-anti-affinity
+https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity: {}
 environment: development
