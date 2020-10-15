@@ -179,4 +179,115 @@ Note that you must have a request set in your deployment to use
 autoscaling. If you do not have a request for CPU in your deployment, the 
 HPA will deploy but will not work correctly.
 You can also create the same ***HorizontalPodAutoscaler*** imperatively
-by running the ***$ kubectl autoscale deployment my-ch7-app-node --cpu-percent=50 --min=1 --max=5**** command.
+by running the ***$ kubectl autoscale deployment my-ch7-app-node --cpu-percent=50 --min=1 --max=5**** command.  
+```
+$ kubectl delete -n default horizontalpodautoscaler my-ch7-app-node
+```
+
+3. Confirm the number of current replicas and the status of the HPA. When you run 
+the following command, the number of replicas should be ***1*** :
+```
+$  kubectl get hpa
+NAME                    REFERENCE                    TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+my-ch7-app-autoscaler   Deployment/my-ch7-app-node   0%/50%   1         5         2          3m45s
+
+```
+
+4. Get the service IP of my-ch7-app-node so that you can use it in the next step:
+```
+$ export SERVICE_IP=$(kubectl get svc --namespace default my-ch7-app-node --template "{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}")
+$ echo http://$SERVICE_IP/
+http://mytodoapp.us-east-1.elb.amazonaws.com/
+```
+
+5. Start a new Terminal window and create a load generator to test the HPA. Make 
+sure that you replace ***YOUR_SERVICE_IP*** in the following code with the actual 
+service IP from the output of ***Step 4***. This command will generate traffic to your 
+To-Do application:  
+```
+$ kubectl run -i --tty load-generator --image=busybox /bin/sh 
+while true; do wget -q -O- YOUR_SERVICE_IP; done
+```
+You will see the below: 
+```
+$ kubectl run -i --tty load-generator --image=busybox /bin/sh                                             
+kubectl run --generator=deployment/apps.v1 is DEPRECATED and will be removed in a future version. Use kubectl run --generator=run-pod/v1 or kubectl create instead.
+If you don't see a command prompt, try pressing enter.
+/ #  while true; do wget -q -O- mytodoapp.us-east-1.elb.amazonaws.com; done
+
+```
+6. Wait a few minutes for the Autoscaler to respond to increasing traffic. While the 
+load generator is running on one Terminal, run the following command on a 
+separate Terminal window to monitor the increased CPU utilization. In our 
+example, this is set to 210% :
+
+```
+$  kubectl get hpa
+NAME                    REFERENCE                    TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+my-ch7-app-autoscaler   Deployment/my-ch7-app-node   210%/50%         1         5         2          23m45s
+```
+7. Now, check the deployment size and confirm that the deployment has been  
+resized to 5 replicas as a result of the increased workload:
+```
+$ kubectl get deployment my-ch7-app-node
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+my-ch7-app-node   5/5     5            5           5h23m
+```
+8. On the Terminal screen where you run the load generator, press Ctrl + C to  
+terminate the load generator. This will stop the traffic coming to your  
+application.
+9. Wait a few minutes for the Autoscaler to adjust and then verify the HPA status  
+by running the following command. The current CPU utilization should be  
+lower. In our example, it shows that it went down to 0% :  
+```
+$  kubectl get hpa
+NAME                    REFERENCE                    TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
+my-ch7-app-autoscaler   Deployment/my-ch7-app-node   0%/50%         1         5         1         34m45s
+```
+10. Check the deployment size and confirm that the deployment has been scaled  
+down to 1 replica as the result of stopping the traffic generator:
+```
+$ kubectl get deployment my-ch7-app-node
+NAME              READY   UP-TO-DATE   AVAILABLE   AGE
+my-ch7-app-node   1/1     1            1           5h33m
+```
+
+In this recipe, you learned how to automate how an application is scaled dynamically based 
+on changing metrics. When applications are scaled up, they are dynamically scheduled on 
+existing worker nodes.
+## How it works...
+This recipe showed you how to manually and automatically scale the number of pods in a 
+deployment dynamically based on the Kubernetes metric.   
+In this recipe, in Step 2, we created an Autoscaler that adjusts the number of replicas 
+between the defined minimum using ***minReplicas: 1*** and ***maxReplicas: 5*** . As shown 
+in the following example, the adjustment criteria are triggered by the 
+***targetCPUUtilizationPercentage: 50*** metric:  
+```
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: my-ch7-app-node
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50
+```
+***targetCPUUtilizationPercentage*** was used with the ***autoscaling/v1*** APIs. You will 
+soon see that ***targetCPUUtilizationPercentage*** will be replaced with an array called 
+metrics.  
+To understand the new metrics and custom metrics, run the following command. This will 
+return the manifest we created with V1 APIs into a new manifest using V2 APIs:  
+```
+$ kubectl get hpa.v2beta2.autoscaling my-ch7-app-node -o yaml
+```
+This enables you to specify additional resource metrics. By default, CPU and memory are 
+the only supported resource metrics. In addition to these resource metrics, v2 APIs enable 
+two other types of metrics, both of which are considered custom metrics: per-pod custom 
+metrics and object metrics. You can read more about this by going to the ***Kubernetes HPA documentation*** link mentioned in the See also section.
+## See also
+*  Kubernetes pod Autoscaler using custom metrics: https://sysdig.com/blog/kubernetes-autoscaler/
+*  Kubernetes HPA documentation: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+*  Declarative Management of Kubernetes Objects Using Configuration  
+Files: https://kubernetes.io/docs/tasks/manage-kubernetes-objects/declarative-config/
+*  Imperative Management of Kubernetes Objects Using Configuration  
+Files: https://kubernetes.io/docs/tasks/manage-kubernetes-objects/imperative-config/
