@@ -210,6 +210,7 @@ spec:
         # Push the image to your ECR and then refer to it here
         image: 316621595343.dkr.ecr.us-west-2.amazonaws.com/k8sdevopscookbook/kube-bench:latest
 ...
+```
 7. Run the job using the following command. It will be executed and completed shortly:
 ```
 $ kubectl apply -f job-eks.yaml
