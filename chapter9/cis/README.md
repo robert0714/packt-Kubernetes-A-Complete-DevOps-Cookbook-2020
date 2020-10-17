@@ -76,6 +76,7 @@ following:
 [FAIL] 1.1.9 Ensure that the --repair-malformed-updates argument is set to false (Scored)
 [PASS] 1.1.10 Ensure that the admission control plugin AlwaysAdmit is not set (Scored)
 ...
+```
 
 Tests are split into categories that have been suggested in the CIS Benchmark 
 guidelines, such as API Server, Scheduler, Controller Manager, Configuration 
