@@ -200,14 +200,10 @@ EOF
 ```
 5. Get the token:
 ```
-$ SECRET_NAME=$(kubectl -n vault get serviceaccount vault-k8s -o
-jsonpath={.secrets[0].name})
-$ ACCOUNT_TOKEN=$(kubectl -n vault get secret ${SECRET_NAME} -o
-jsonpath={.data.token} | base64 --decode; echo)
-$ export VAULT_SA_NAME=$(kubectl get sa -n vault vault-k8s -o
-jsonpath=”{.secrets[*].name}”)
-$ export SA_CA_CRT=$(kubectl get secret $VAULT_SA_NAME -n vault -o
-jsonpath={.data.'ca\.crt'} | base64 --decode; echo)
+$ SECRET_NAME=$(kubectl -n vault get serviceaccount vault-k8s -o jsonpath={.secrets[0].name})
+$ ACCOUNT_TOKEN=$(kubectl -n vault get secret ${SECRET_NAME} -o jsonpath={.data.token} | base64 --decode; echo)
+$ export VAULT_SA_NAME=$(kubectl get sa -n vault vault-k8s -o jsonpath=”{.secrets[*].name}”)
+$ export SA_CA_CRT=$(kubectl get secret $VAULT_SA_NAME -n vault -o jsonpath={.data.'ca\.crt'} | base64 --decode; echo)
 ```
 6. Enable the Kubernetes auth backend in the vault:
 ```
