@@ -103,6 +103,7 @@ Cluster ID      c72cf7d0-b2e7-351c-03d6-e56d8485f422
 HA Enabled      false
 ```
 
+
 9. Verify the pod's status. You will see that the readiness probe has been validated and that the pod is ready:
 ```
 $ kubectl -n vault get pods
@@ -156,6 +157,25 @@ Key               Value
 refresh_interval  768h
 value             bar
 ```
+or 
+```
+$ kubectl exec -it  vault-0 -nvault -- vault login s.tz6BvcPXJxrbe1WsgX2tPf1a && vault  write secret/foo value=bar 
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                s.tz6BvcPXJxrbe1WsgX2tPf1a
+token_accessor       RYZwtIJyWKST8epldXbV5Yka
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+-bash: vault: command not found
+
+```
 3. Let's configure Vault's Kubernetes authentication backend. First, create a ServiceAccount:
 ```
 $ kubectl -n vault create serviceaccount vault-k8s
@@ -163,6 +183,20 @@ $ kubectl -n vault create serviceaccount vault-k8s
 4. Create a RoleBinding for the vault-k8s ServiceAccount:
 ```
 $ cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: role-tokenreview-binding
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:auth-delegator
+subjects:
+- kind: ServiceAccount
+  name: vault-k8s
+  namespace: default
+EOF
 ```
 5. Get the token:
 ```
