@@ -90,19 +90,17 @@ $ cat config/falco_rules.local.yaml
 - rule: Detect crypto miners using the Stratum protocol
 ```
 
-3. Let's test that Falco is working by getting a bash shell into one of the Falco pods
-and view the logs afterward. List the Falco pods:
-$ kubectl get pods | grep
-falco-daemonset-94p8w 1/1
-falco-daemonset-c49v5 1/1
-falco-daemonset-htrxw 1/1
-falco-daemonset-kwms5 1/1
-falco-daemonset
-Running 0 2m34s
-Running 0 2m34s
-Running 0 2m34s
-Running 0 2m34s
+3. Let's test that Falco is working by getting a bash shell into one of the Falco pods and view the logs afterward. List the Falco pods:
+```
+$ kubectl get pods |grep falco-daemonset
+falco-daemonset-446h5            1/1     Running   0          79m
+falco-daemonset-5bqtc            1/1     Running   0          79m
+falco-daemonset-c6tz6            1/1     Running   0          79m
+falco-daemonset-sxxl8            1/1     Running   0          79m
+```
 4. Get bash shell access to one of the Falco pods from the output of the preceding
 command and view the logs:
-$ kubectl exec -it falco-daemonset-94p8w bash
-$ kubectl logs falco-daemonset-94p8w
+```
+$ kubectl exec -it falco-daemonset-446h5 bash
+$ kubectl logs falco-daemonset-446h5
+```
