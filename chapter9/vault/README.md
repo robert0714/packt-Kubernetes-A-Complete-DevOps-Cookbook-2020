@@ -45,6 +45,8 @@ $ helm install --name vault --namespace vault ./
 ```
 $ helm install --name vault --namespace vault --set='server.ha.enabled=true' ./
 ```
+If you see the error Error: apiVersion 'v2' is not valid. The value must be "v1" , you need to use Helm v.3 (vault v0.4.0+ use helm v3)
+
 5. Verify the status of the pods. You will notice that the pods aren't ready since the readiness probe requires Vault to be initialized first:
 ```
 $ kubectl -n vault get pods
