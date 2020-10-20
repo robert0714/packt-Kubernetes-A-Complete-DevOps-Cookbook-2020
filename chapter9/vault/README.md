@@ -151,16 +151,12 @@ $ vault login <root-token-here>
 $ vault write secret/foo value=bar
 Success! Data written to: secret/foo
 $ vault read secret/foo
-Key
-Value
----
------
-refresh_interval 768h
-value
-bar
+Key               Value
+---               -----
+refresh_interval  768h
+value             bar
 ```
-3. Let's configure Vault's Kubernetes authentication backend. First, create a 
-ServiceAccount:
+3. Let's configure Vault's Kubernetes authentication backend. First, create a ServiceAccount:
 ```
 $ kubectl -n vault create serviceaccount vault-k8s
 ```
@@ -168,3 +164,54 @@ $ kubectl -n vault create serviceaccount vault-k8s
 ```
 $ cat <<EOF | kubectl apply -f -
 ```
+5. Get the token:
+```
+$ SECRET_NAME=$(kubectl -n vault get serviceaccount vault-k8s -o
+jsonpath={.secrets[0].name})
+$ ACCOUNT_TOKEN=$(kubectl -n vault get secret ${SECRET_NAME} -o
+jsonpath={.data.token} | base64 --decode; echo)
+$ export VAULT_SA_NAME=$(kubectl get sa -n vault vault-k8s -o
+jsonpath=”{.secrets[*].name}”)
+$ export SA_CA_CRT=$(kubectl get secret $VAULT_SA_NAME -n vault -o
+jsonpath={.data.'ca\.crt'} | base64 --decode; echo)
+```
+6. Enable the Kubernetes auth backend in the vault:
+```
+$ vault auth enable kubernetes
+$ vault write auth/kubernetes/config
+kubernetes_host=”https://MASTER_IP:6443"
+kubernetes_ca_cert=”$SA_CA_CRT”
+token_reviewer_jwt=$TR_ACCOUNT_TOKEN
+```
+7. Create a new policy called vault-policy from the example repository using the policy.hcl : file:
+```
+$ vault write sys/policy/vault-policy policy=@policy.hcl
+```
+8. Next, create a Role for the ServiceAccount:
+```
+$ vault write auth/kubernetes/role/demo-role \
+bound_service_account_names=vault-coreos-test \
+bound_service_account_namespaces=default \
+policies=demo-policy \
+ttl=1h
+```
+9. Authenticate with the Role by running the following command:
+```
+$ DEFAULT_ACCOUNT_TOKEN=$(kubectl get secret $VAULT_SA_NAME -n
+vault -o jsonpath={.data.token} | base64 — decode; echo )
+```
+10. Log in to the Vault with the token by running the following command:
+```
+$ vault write auth/kubernetes/login role=demo-role
+jwt=${DEFAULT_ACCOUNT_TOKEN}
+```
+11. Create a secret at the secret/demo path:
+```
+$ vault write secret/demo/foo value=bar
+```
+With that, you've learned how to create a Kubernetes auth backend with Vault and use Vault to store Kubernetes secrets.
+
+## See also
+*  Hashicorp Vault documentation: https://www.vaultproject.io/docs/
+*  Hashicorp Vault repository: https://github.com/hashicorp/vault-helm
+*  Hands-on with Vault on Kubernetes: https://github.com/hashicorp/hands-on-with-vault-on-kubernetes
