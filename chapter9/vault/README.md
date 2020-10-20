@@ -33,9 +33,7 @@ $ cd vault-helm
 ```
 2. Check out the latest stable release:
 ```
-$ git checkout v$(curl --silent
-"https://api.github.com/repos/hashicorp/vault-helm/releases/latest"
-| \
+$ git checkout v$(curl --silent "https://api.github.com/repos/hashicorp/vault-helm/releases/latest"| \
 grep '"tag_name":' | \
 sed -E 's/.*"v([^"]+)".*/\1/')
 ```
