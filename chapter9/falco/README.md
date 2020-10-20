@@ -27,7 +27,7 @@ Let's perform the following steps to get Falco deployed on our cluster:
 1. Clone the Falco repository into your current working directory:
 ```
 $ git clone https://github.com/falcosecurity/falco.git
-$ cd falco && git checkout 0.26.1 && cd .. 
+$ cd falco && git checkout 0.22.1 && cd .. 
 $ cd falco/integrations/k8s-using-daemonset/k8s-with-rbac
 ```
 2. Create a Service Account for Falco. The following command will also create the ClusterRole and ClusterRoleBinding for it:
