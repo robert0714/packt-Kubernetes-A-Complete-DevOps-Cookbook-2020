@@ -54,26 +54,61 @@ $ kubectl -n vault get pods
 6. Check the initialization status. It should be false :
 ```
 $ kubectl exec -it vault-0 -nvault -- vault status
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        false
+Sealed             true
+Total Shares       0
+Threshold          0
+Unseal Progress    0/0
+Unseal Nonce       n/a
+Version            n/a
+HA Enabled         false
 ```
 7. Initialize the Vault instance. The following command will return an unseal key 
 and root token:
 ```
-$ kubectl exec -it vault-0 -nvault -- vault operator init -n 1 -t 1
-Unseal Key 1: lhLeU6SRdUNQgfpWAqWknwSxns1tfWP57iZQbbYtFSE=
-Initial Root Token: s.CzcefEkOYmCt70fGSbHgSZl4
-Vault initialized with 1 key shares and a key threshold of 1.
-Please securely distribute the key shares printed above. When the Vault is re-sealed, restarted, or stopped, you must supply at least 1 of these keys to
-unseal it before it can start servicing requests.
+$ $ kubectl exec -it vault-0 -nvault -- vault operator init -n 1 -t 1
+Unseal Key 1: C7VKyiFNE83VDokKU3XqMt/lPJUmWQ9CYIMak6tj0xU=
+
+Initial Root Token: s.tz6BvcPXJxrbe1WsgX2tPf1a
+
+Vault initialized with 1 key shares and a key threshold of 1. Please securely
+distribute the key shares printed above. When the Vault is re-sealed,
+restarted, or stopped, you must supply at least 1 of these keys to unseal it
+before it can start servicing requests.
+
+Vault does not store the generated master key. Without at least 1 key to
+reconstruct the master key, Vault will remain permanently sealed!
+
+It is possible to generate new unseal keys, provided you have a quorum of
+existing unseal keys shares. See "vault operator rekey" for more information.
+
 ```
 
 8. Unseal Vault using the unseal key from the output of the following command:
 ```
-$ kubectl exec -it vault-0 -nvault -- vault operator unseal
+$ kubectl exec -it vault-0 -nvault -- vault operator unseal C7VKyiFNE83VDokKU3XqMt/lPJUmWQ9CYIMak6tj0xU=
+Key             Value
+---             -----
+Seal Type       shamir
+Initialized     true
+Sealed          false
+Total Shares    1
+Threshold       1
+Version         1.3.1
+Cluster Name    vault-cluster-204422bf
+Cluster ID      c72cf7d0-b2e7-351c-03d6-e56d8485f422
+HA Enabled      false
 ```
 
 9. Verify the pod's status. You will see that the readiness probe has been validated and that the pod is ready:
 ```
-$ kubectl get pods -n vault
+$ kubectl -n vault get pods
+NAME                                    READY   STATUS    RESTARTS   AGE
+vault-0                                 1/1     Running   0          3m56s
+vault-agent-injector-77d8f6d9d4-jkqxc   1/1     Running   0          3m56s
 ```
 Vault is ready to be used after it is initialized. Now, you know how to get Vault running on Kubernetes.
 
@@ -86,7 +121,21 @@ command:
 ```
 $ kubectl port-forward vault-0 -nvault 8200:8200
 ```
-2. Once forwarding is complete, you can access the UI at http://localhost:8200 :
+or 
+```
+kubectl -n vault get svc
+NAME                       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+vault                      ClusterIP   10.111.174.214   <none>        8200/TCP,8201/TCP   5m35s
+vault-agent-injector-svc   ClusterIP   10.101.117.90    <none>        443/TCP             5m35s
+$ kubectl -n vault edit svc vault
+service/vault edited
+$ kubectl -n vault get svc
+NAME                       TYPE           CLUSTER-IP       EXTERNAL-IP    PORT(S)                         AGE
+vault                      LoadBalancer   10.111.174.214   192.16.35.17   8200:31098/TCP,8201:31034/TCP   6m12s
+vault-agent-injector-svc   ClusterIP      10.101.117.90    <none>         443/TCP                         6m12s
+
+```
+2. Once forwarding is complete, you can access the UI at http://localhost:8200  (or http://192.16.35.17:8200/ui/vault/auth):
 
 Now, you have access to the web UI. Take the Vault Web UI tour to familiarize yourself with its functionality.
 
