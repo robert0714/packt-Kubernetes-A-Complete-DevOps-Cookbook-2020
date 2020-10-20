@@ -153,7 +153,7 @@ complete the task successfully:
 ```
 $ kubectl exec client -n falcotest -- curl -F "s=OK" -F "user=bob" -F "passwd=foobar" -F "ipaddr=localhost" -X POST http://ping/ping.php
 ```
-5. Edit the falco_rules.local.yaml file:
+5. Edit the falco_rules.local.yaml (location: falco/integrations/k8s-using-daemonset/k8s-with-rbac/config/falco_rules.local.yaml ) file:
 ```
 $ vim config/falco_rules.local.yaml
 ```
