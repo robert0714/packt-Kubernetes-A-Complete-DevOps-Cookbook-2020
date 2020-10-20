@@ -27,6 +27,7 @@ Let's perform the following steps to get Falco deployed on our cluster:
 1. Clone the Falco repository into your current working directory:
 ```
 $ git clone https://github.com/falcosecurity/falco.git
+$ cd falco && git checkout 0.26.1 && cd .. 
 $ cd falco/integrations/k8s-using-daemonset/k8s-with-rbac
 ```
 2. Create a Service Account for Falco. The following command will also create the ClusterRole and ClusterRoleBinding for it:
@@ -69,3 +70,39 @@ Falco detects a variety of suspicious behavior. In this recipe, we will produce 
 activities that would be suspicious on a normal production cluster.
 
 Let's perform the following steps to produce activities that would trigger a syscall event drop:
+
+1. First, we need to review the full rules before we test some of the behaviors. Falco has two rules files. The default rules are located at
+/etc/falco/falco_rules.yaml , while the local rules file is located at ***/etc/falco/falco_rules.local.yaml*** . Your custom rules and modifications
+should be in the ***falco_rules.local.yaml*** file:
+```
+$ cat config/falco_rules.yaml
+$ cat config/falco_rules.local.yaml
+```
+
+2. You will see a long list of default rules and macros. Some of them are as follows:
+```
+- rule: Disallowed SSH Connection
+- rule: Launch Disallowed Container
+- rule: Contact K8S API Server From Container
+- rule: Unexpected K8s NodePort Connection
+- rule: Launch Suspicious Network Tool in Container
+- rule: Create Symlink Over Sensitive Files
+- rule: Detect crypto miners using the Stratum protocol
+```
+
+3. Let's test that Falco is working by getting a bash shell into one of the Falco pods
+and view the logs afterward. List the Falco pods:
+$ kubectl get pods | grep
+falco-daemonset-94p8w 1/1
+falco-daemonset-c49v5 1/1
+falco-daemonset-htrxw 1/1
+falco-daemonset-kwms5 1/1
+falco-daemonset
+Running 0 2m34s
+Running 0 2m34s
+Running 0 2m34s
+Running 0 2m34s
+4. Get bash shell access to one of the Falco pods from the output of the preceding
+command and view the logs:
+$ kubectl exec -it falco-daemonset-94p8w bash
+$ kubectl logs falco-daemonset-94p8w
