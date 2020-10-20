@@ -72,7 +72,7 @@ activities that would be suspicious on a normal production cluster.
 Let's perform the following steps to produce activities that would trigger a syscall event drop:
 
 1. First, we need to review the full rules before we test some of the behaviors. Falco has two rules files. The default rules are located at
-/etc/falco/falco_rules.yaml , while the local rules file is located at ***/etc/falco/falco_rules.local.yaml*** . Your custom rules and modifications
+***/etc/falco/falco_rules.yaml*** (https://github.com/falcosecurity/falco/blob/master/rules/falco_rules.yaml) , while the local rules file is located at ***/etc/falco/falco_rules.local.yaml*** (https://github.com/falcosecurity/falco/blob/master/rules/falco_rules.local.yaml) . Your custom rules and modifications
 should be in the ***falco_rules.local.yaml*** file:
 ```
 $ cat config/falco_rules.yaml
