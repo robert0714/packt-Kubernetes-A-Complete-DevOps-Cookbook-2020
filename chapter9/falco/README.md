@@ -166,7 +166,7 @@ $ vim config/falco_rules.local.yaml
   priority: ERROR
   tags: [process]
 ```
-7. Update the ConfigMap that's being used for the DaemonSet and delete the pods to get a new configuration by running the following command:
+7. Update the ConfigMap (falco/integrations/k8s-using-daemonset/k8s-with-rbac/falco-daemonset-configmap.yaml) that's being used for the DaemonSet and delete the pods to get a new configuration by running the following command:
 ```
 $ kubectl delete -f falco-daemonset-configmap.yaml
 $ kubectl create configmap falco-config --from-file=config --dry-run --save-config -o yaml | kubectl apply -f -
