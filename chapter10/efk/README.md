@@ -242,7 +242,7 @@ $ kubectl get secret elasticsearch-es-elastic-user \
 ```
 3. Create a port-forwarding service to access the Kibana dashboard from your workstation:
 ```
-$ kubectl port-forward service/mykibana-kb-http 5601
+$ kubectl   -n logging port-forward service/mykibana-kb-http 5601
 ```
 4. Open the Kibana dashboard at https://localhost:5601 in your browser. Enter elastic as the username and the password from the output of Step 2:
 
