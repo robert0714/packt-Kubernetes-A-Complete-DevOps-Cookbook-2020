@@ -237,8 +237,8 @@ about how Telepresence functions by looking at the How Telepresence works link i
 also section.
 
 ## See also
-*  kubectl log commands: https:/​ / ​ kubernetes.​ io/​ docs/​ reference/​ generated/kubectl/​ kubectl-​ commands#logs
-*  Telepresence source code repository: https:/​ / ​ github.​ com/​ telepresenceio/telepresence
-*  Full list of Telepresence methods: https:/​ / ​ telepresence.​ io/​ reference/methods.​ html
-*  How Telepresence works: https:/​ / ​ www.​ telepresence.​ io/​ discussion/​ how-​ it-works
-*  How to use volume access support with Telepresence: https:/​ / ​ telepresence.io/​ howto/​ volumes.​ html
+*  kubectl log commands: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs
+*  Telepresence source code repository: https://github.com/telepresenceio/telepresence
+*  Full list of Telepresence methods: https://telepresence.io/reference/methods.html
+*  How Telepresence works: https://www.telepresence.io/discussion/how-it-works
+*  How to use volume access support with Telepresence: https://telepresence.io/howto/volumes.html
