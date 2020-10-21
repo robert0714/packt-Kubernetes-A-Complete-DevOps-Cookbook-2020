@@ -284,7 +284,7 @@ kind: ConfigMap
 metadata:
   name: postgres-config
   labels:
-  app: postgres
+    app: postgres
 data:
   POSTGRES_DB: postgresdb
   POSTGRES_USER: testuser
