@@ -149,3 +149,79 @@ Now, we have access to our three-node small Elasticsearch cluster that we deploy
 
 # Deploying Kibana
 Kibana is an open source data visualization dashboard that lets you visualize your Elasticsearch data.
+
+Let's perform the following steps to get Kibana deployed:
+
+1. Create a Kibana instance associated with the Elasticsearch cluster we created previously:
+```
+$ cat <<EOF | kubectl apply -f -
+apiVersion: kibana.k8s.elastic.co/v1beta1
+kind: Kibana
+metadata:
+  name: mykibana
+  namespace: logging
+spec:
+  version: 7.4.2
+  count: 1
+  elasticsearchRef:
+    name: elasticsearch
+EOF
+```
+2. Get the status of the Kibana node:
+```
+$  kubectl get elasticsearch -n logging
+NAME            HEALTH   NODES   VERSION   PHASE   AGE
+elasticsearch   green    1       7.4.2     Ready   55m
+```
+3. You can also confirm the pod's status in the logging namespace using the following command:
+```
+$ kubectl get pods -n logging
+NAME                          READY   STATUS              RESTARTS   AGE
+elasticsearch-es-default-0    1/1     Running             0          56m
+elasticsearch-es-default-1    1/1     Running             0          56m
+elasticsearch-es-default-2    1/1     Running             0          56m
+mykibana-kb-8f6bd95cb-chrm8   1/1     Running             0          3m36s
+```
+With that, you have both Elasticsearch and Kibana nodes deployed. Next, we will deploy fluent-bit to forward container logs to our Elasticsearch deployment.
+
+## Aggregating logs with Fluent Bit
+
+Let's perform the following steps to get fluent-bit deployed:
+
+1. Get the password for the default elastic user:
+```
+$ kubectl get secret elasticsearch-es-elastic-user \
+-n logging -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+```
+
+2. Copy the output of Step 1 and edit the ***fluent-bit-values.yaml*** file in the ***/src/chapter10/efk*** directory. Replace the ***http_passwd*** value with the output of Step 1 and save the file:
+```
+backend:
+  type: es
+  es:
+    host: elasticsearch-es-http
+    port: 9200
+    http_user: elastic
+    http_passwd: m2zr9fz49zqbkbpksprf4r76
+    # Optional TLS encryption to ElasticSearch instance
+    tls: "on"
+    tls_verify: "off"
+```
+3. Deploy fluent-bit using the Helm chart:
+```
+$ helm install stable/fluent-bit --name=fluent-bit --namespace=logging -f fluent-bit-values.yaml
+```
+4. Confirm the pod's status in the logging namespace using the following command:
+```
+$   kubectl get pods -n logging
+NAME                          READY   STATUS              RESTARTS   AGE
+elasticsearch-es-default-0    1/1     Running             0          61m
+elasticsearch-es-default-1    1/1     Running             0          61m
+elasticsearch-es-default-2    1/1     Running             0          61m
+fluent-bit-966ck              0/1     ContainerCreating   0          16s
+fluent-bit-dcm76              0/1     ContainerCreating   0          16s
+fluent-bit-pz8c7              0/1     ContainerCreating   0          16s
+fluent-bit-rn89k              0/1     ContainerCreating   0          16s
+mykibana-kb-8f6bd95cb-chrm8   1/1     Running             0          6m1s
+
+```
