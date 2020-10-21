@@ -244,7 +244,24 @@ $ kubectl get secret elasticsearch-es-elastic-user \
 ```
 $ kubectl   -n logging port-forward service/mykibana-kb-http 5601
 ```
-4. Open the Kibana dashboard at https://localhost:5601 in your browser. Enter elastic as the username and the password from the output of Step 2:
+or modify the type to LoadBalancer.
+```
+$ kubectl -n logging get svc
+NAME                       TYPE           CLUSTER-IP       EXTERNAL-IP    PORT(S)          AGE
+elasticsearch-es-default   ClusterIP      None             <none>         <none>           3h15m
+elasticsearch-es-http      LoadBalancer   10.99.41.150     192.16.35.18   9200:30695/TCP   3h15m
+mykibana-kb-http           ClusterIP      10.104.168.228   <none>         5601/TCP         140m
+
+$ kubectl -n logging edit svc  mykibana-kb-http  
+service/mykibana-kb-http edited
+
+$ kubectl -n logging get svc
+NAME                       TYPE           CLUSTER-IP       EXTERNAL-IP    PORT(S)          AGE
+elasticsearch-es-default   ClusterIP      None             <none>         <none>           3h16m
+elasticsearch-es-http      LoadBalancer   10.99.41.150     192.16.35.18   9200:30695/TCP   3h16m
+mykibana-kb-http           LoadBalancer   10.104.168.228   192.16.35.19   5601:31933/TCP   141m
+```
+4. Open the Kibana dashboard at https://localhost:5601 ( or https://192.16.35.19:5601 ) in your browser. Enter elastic as the username and the password from the output of Step 2:
 
 5. On the home page, click on the ***Connect to your Elasticsarch index*** button, as shown in the following screenshot:
 
