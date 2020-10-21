@@ -78,10 +78,13 @@ spec:
       node.ingest: true
       node.store.allow_mmap: false
 EOF
+```
 5. Get the status of the Elasticsearch nodes:
+```
 $ kubectl get elasticsearch -n logging
-NAME HEALTH NODES VERSION PHASE AGE
-elasticsearch green 3 7.4.2 Ready 86s
+NAME            HEALTH  NODES     VERSION   PHASE     AGE
+elasticsearch   green   3         7.4.2     Ready     86s
+```
 6. You can also confirm the pod's status in the logging namespace using the
 following command:
 $ kubectl get pods -n logging
