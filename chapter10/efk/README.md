@@ -213,15 +213,63 @@ $ helm install stable/fluent-bit --name=fluent-bit --namespace=logging -f fluent
 ```
 4. Confirm the pod's status in the logging namespace using the following command:
 ```
-$   kubectl get pods -n logging
-NAME                          READY   STATUS              RESTARTS   AGE
-elasticsearch-es-default-0    1/1     Running             0          61m
-elasticsearch-es-default-1    1/1     Running             0          61m
-elasticsearch-es-default-2    1/1     Running             0          61m
-fluent-bit-966ck              0/1     ContainerCreating   0          16s
-fluent-bit-dcm76              0/1     ContainerCreating   0          16s
-fluent-bit-pz8c7              0/1     ContainerCreating   0          16s
-fluent-bit-rn89k              0/1     ContainerCreating   0          16s
-mykibana-kb-8f6bd95cb-chrm8   1/1     Running             0          6m1s
+$ kubectl get pods -n logging
+NAME                          READY   STATUS    RESTARTS   AGE
+elasticsearch-es-default-0    1/1     Running   0          3h1m
+elasticsearch-es-default-1    1/1     Running   0          3h1m
+elasticsearch-es-default-2    1/1     Running   0          3h1m
+fluent-bit-966ck              1/1     Running   0          120m
+fluent-bit-dcm76              1/1     Running   0          120m
+fluent-bit-pz8c7              1/1     Running   0          120m
+fluent-bit-rn89k              1/1     Running   0          120m
+mykibana-kb-8f6bd95cb-chrm8   1/1     Running   0          126m
+```
+With that, you have deployed all the components of the EFK stack. Next, we will connect to the Kibana dashboard.
+## Accessing Kubernetes logs on Kibana
+Let's perform the following steps to connect to the Kibana dashboard:
+
+1. Confirm that the Kibana service has been created. By default, a ClusterIP service will be created:
+```
+$ kubectl get service mykibana-kb-http -n logging
+NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+mykibana-kb-http   ClusterIP   10.104.168.228   <none>        5601/TCP   127m
 
 ```
+2. Before we connect to the dashboard, get the password for the default elastic user:
+```
+$ kubectl get secret elasticsearch-es-elastic-user \
+-n logging -o=jsonpath='{.data.elastic}' | base64 --decode; echo
+```
+3. Create a port-forwarding service to access the Kibana dashboard from your workstation:
+```
+$ kubectl port-forward service/mykibana-kb-http 5601
+```
+4. Open the Kibana dashboard at https://localhost:5601 in your browser. Enter elastic as the username and the password from the output of Step 2:
+
+5. On the home page, click on the ***Connect to your Elasticsarch index*** button, as shown in the following screenshot:
+
+6. Kibana will search for Elasticsearch index patterns. Define the index pattern that matches your results. In our example, we used *kubernetes_cluster-** . Click
+on Next step to continue:
+
+7. Specify ***Time Filter field name*** as *@timestamp* and click on the ***Create index pattern*** button, as shown in the following screenshot:
+
+8. Click on the ***Discover*** menu. It is the first icon from the top:
+
+9. On the ***Discover*** page, use the search field to look for keywords and filters:
+
+10. If the keyword you are looking for can't be found in the current time frame, you 
+need to change the date range by clicking on the calendar icon next to the search 
+field and clicking on the ***Apply*** button after the new range has been selected:
+
+With that, you've learned how to configure an EFK stack on your Kubernetes cluster in
+order to manage and visualize cluster-wide logs.
+
+## See also
+* Elastic Cloud on Kubernetes (ECK): https:/​ / ​ github.​ com/​ elastic/​ cloud-​ on-k8s
+* Deployment instructions on Red Hat OpenShift: https:/​ / ​ www.​ elastic.​ co/guide/​ en/​ cloud-​ on-​ k8s/​ 0.​ 9/​ k8s-​ openshift.​ html
+* Elasticsearch Service documentation: https:/​ / ​ www.​ elastic.​ co/​ guide/​ en/cloud/​ current/​ index.​ html
+* Introduction to Kibana: https:/​ / ​ www.​ elastic.​ co/​ guide/​ en/​ kibana/​ 7.​ 4/introduction.​ html#introduction
+* Fluentd documentation: https:/​ / ​ docs.​ fluentd.​ org/​
+* Fluent Bit documentation: https:/​ / ​ docs.​ fluentbit.​ io/​ manual/​
+* Rancher Elastic Stack Kubernetes Helm Charts: https:/​ / ​ github.​ com/​ rancher/charts/​ tree/​ master/​ charts/​ efk/​ v7.​ 3.​ 0
+* Kudo Elastic Operator: https:/​ / ​ github.​ com/​ kudobuilder/​ operators/​ tree/master/​ repository/​ elastic
