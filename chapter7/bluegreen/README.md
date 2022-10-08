@@ -12,3 +12,8 @@ If your workload needs to deploy a new version and cut over to it immediately th
 
 Using Blue/Green deployment approach, you label the current production as “Blue”. Create an identical production environment called “Green” - Redirect the services to “Green”. 
 If services are functional in “Green” - destroy “Blue”. If “Green” is bad - rollback to “Blue”.
+
+## Other Refernces
+* [Zero Downtime Deployment in Kubernetes with Jenkins](https://kubernetes.io/blog/2018/04/30/zero-downtime-deployment-kubernetes-jenkins/)
+* [A Simple Guide to bluelue/green Deployment](https://codefresh.io/learn/software-deployment/what-is-blue-green-deployment)
+* [Kubernetes blue/green deployment Examples](https://github.com/ContainerSolutions/k8s-deployment-strategies/tree/master/blue-green)
