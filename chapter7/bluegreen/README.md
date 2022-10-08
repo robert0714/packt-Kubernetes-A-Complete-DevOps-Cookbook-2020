@@ -17,6 +17,6 @@ If services are functional in “Green” - destroy “Blue”. If “Green” i
 * [Zero Downtime Deployment in Kubernetes with Jenkins](https://kubernetes.io/blog/2018/04/30/zero-downtime-deployment-kubernetes-jenkins/)
 * [A Simple Guide to bluelue/green Deployment](https://codefresh.io/learn/software-deployment/what-is-blue-green-deployment)
 * [Kubernetes blue/green deployment Examples](https://github.com/ContainerSolutions/k8s-deployment-strategies/tree/master/blue-green)
-* Azure DevOps
+* Microsoft solutions about Azure DevOps
   * [How to Set up Azure DevOps for Blue/Green Deployments with App Services](https://techgenix.com/azure-devops-bluegreen-deployments/) 
   * [Blue-Green deployments using Azure Traffic Manager](https://azure.microsoft.com/zh-tw/blog/blue-green-deployments-using-azure-traffic-manager/)
